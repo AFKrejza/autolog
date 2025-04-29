@@ -19,12 +19,13 @@ router.post("/create", (req, res) => {
     const valid = ajv.validate(entrySchema, req.body);
 
     if (valid) {
-        res.json(req.body)
+        //res.json(req.body)
+        //call write function in data/dataManagementLayer.js
     }
     else {
         res.status(400).send(ajv.errors);
     }
 })
 
-//exports the routes
+//exports the routes for use elsewhere
 module.exports = router;
