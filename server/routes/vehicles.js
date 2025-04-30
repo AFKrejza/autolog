@@ -36,10 +36,20 @@ router.post("/create", (req, res) => {
         //TODO: add proper codes, e.g. missing year: correct code plus message
         dml.createVehicle(req.body);
         res.status(201).send("Vehicle created");
+        console.log("Vehicle created")
     }
     else {
         res.status(400).send(ajv.errors);
     }
+})
+
+//get vehicle by ID
+// added async before (req,res) to use await inside the function
+router.get("/get", async (req, res) => {
+    //req.body.id = id value. TODO: make sure (validate) it's an int - check here or use ajv schema for id.
+    const getVehicle = await dml.readVehicle(req.body.id);
+    console.log(getVehicle);
+    res.status(200).send(getVehicle);
 })
 
 //exports the routes

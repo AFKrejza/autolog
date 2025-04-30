@@ -24,19 +24,19 @@ async function createVehicle (data) {
     }
     
     data.id = id;
-    console.log(data.id);
+    //console.log(data.id); debug
 
     allVehicles.push(data);
 
     await fs.promises.writeFile('./data/vehicles.json', JSON.stringify(allVehicles), {encoding: "utf-8"});
 }
 
-//read vehicle list
+//read ALL vehicles
 async function readVehicles () {
     const allVehicles = await fs.promises.readFile(vehicles);
     //if it's empty, it will crash when trying to parse it
     if (allVehicles.length == 0) {
-        return 0; //TODO: fix this, it adds null to the data. Huge issues later!
+        return 0;
     }
     return await JSON.parse(allVehicles);
 }
@@ -52,5 +52,20 @@ function newID (allVehicles) {
     //works fine, prevents duplicate and <1 ids. always selects next highest id.
 }
 
+//consider modifying readVehicles to just read each vehicle by ID
+//function reads vehicle by requested ID and returns the whole vehicle object
+
+//TODO: just use the readVehicles function
+async function readVehicle (ID) {
+    const allVehicle = await fs.promises.readFile(vehicles); //clean this up
+    const allVehicles = JSON.parse(allVehicle);
+
+    //find index of ID vehicle, return vehicle at index
+    const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
+    const returnVehicle = allVehicles[vehicleIndex];
+    return returnVehicle;
+}
+
 module.exports.createVehicle = createVehicle;
 module.exports.readVehicles = readVehicles;
+module.exports.readVehicle = readVehicle;
