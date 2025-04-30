@@ -19,7 +19,7 @@ const vehicles = path.join(dataPath, "vehicles.json");
 //see if ajv validation works:
 //full route: http://localhost:3000/vehicles/create
 //CREATE NEW VEHICLE
-router.post("/create", (req, res) => {
+router.post("/create", async (req, res) => {
     const ajv = new Ajv();
     
     //debug, leave this here for now
@@ -34,8 +34,8 @@ router.post("/create", (req, res) => {
         //call create function in data/dataManagementLayer.js
         //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
         //TODO: add proper codes, e.g. missing year: correct code plus message
-        dml.createVehicle(req.body);
-        res.status(201).send("Vehicle created");
+        await dml.createVehicle(req.body);
+        res.status(201).send("Vehicle created"); //stringify and return the created vehicle
         console.log("Vehicle created")
     }
     else {
@@ -50,6 +50,20 @@ router.get("/get", async (req, res) => {
     const getVehicle = await dml.readVehicle(req.body.id);
     console.log(getVehicle);
     res.status(200).send(getVehicle);
+    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
+})
+
+//list all vehicles
+router.get("/list", async (req, res) => {
+    const list = await dml.readVehicles();
+    res.status(200).send(list);
+})
+
+//delete selected vehicle by ID
+//get ID like in get, then delete that index
+router.delete("/delete", async (req, res) => {
+    const vehicle = await dml.deleteVehicle(req.body.id);
+    res.status(200).send("deleted vehicle"); //TODO: this doesn't verify the deletion
 })
 
 //exports the routes

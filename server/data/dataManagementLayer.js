@@ -63,9 +63,27 @@ async function readVehicle (ID) {
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
     const returnVehicle = allVehicles[vehicleIndex];
-    return returnVehicle;
+    return returnVehicle; //this returns a copy?
+}
+
+//delete vehicle by finding ID, then delete that index
+//TODO: very similar to readVehicle function, make a new function
+//import, then delete the element, then write the whole thing to vehicles.json again
+async function deleteVehicle (ID) {
+    const allVehicle = await fs.promises.readFile(vehicles); //clean this up
+    const allVehicles = JSON.parse(allVehicle);
+
+    //find index of ID vehicle, return vehicle at index
+    const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
+    console.log("vehicleIndex: " + vehicleIndex);
+    allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
+
+    await fs.promises.writeFile('./data/vehicles.json', JSON.stringify(allVehicles), {encoding: "utf-8"});
+    //console.log("deleted vehicle");
+    //return returnVehicle; //this returns a copy?
 }
 
 module.exports.createVehicle = createVehicle;
 module.exports.readVehicles = readVehicles;
 module.exports.readVehicle = readVehicle;
+module.exports.deleteVehicle = deleteVehicle;
