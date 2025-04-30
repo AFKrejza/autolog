@@ -8,11 +8,6 @@ const port = 3000;
 //convert json data into js object
 app.use(express.json());
 
-//simple route definition with HTTP GET method that returns text
-app.get("/world", (req, res) => {
-  res.send('Hello World!')
-});
-
 //test
 app.get("/test", (req, res) => {
   res.send('test!')

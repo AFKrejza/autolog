@@ -26,6 +26,7 @@ router.post("/create", (req, res) => {
         res.status(400).send(ajv.errors);
     }
 })
+//first validate, then check if id exists, otherwise return 400
 
 //exports the routes for use elsewhere
 module.exports = router;

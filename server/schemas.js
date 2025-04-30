@@ -1,19 +1,29 @@
 // Server Side JS - Express.js - Validation - Using Ajv for schemas
 
-const Ajv = require("ajv").default;
+//const Ajv = require("ajv").default;
 
 //vehicle creation schema
 //contains: make, model, year, maybe notes?
+const newVehicleSchema = {
+    type: "object",
+    properties: {
+        make: {type: "string"},
+        model: {type: "string"},
+        year: {type: "integer", exclusiveMinimum: 0}
+    },
+    required: ["make", "model", "year"]
+}
+
 const vehicleSchema = {
     type: "object",
     properties: {
         make: {type: "string"},
         model: {type: "string"},
-        year: {type: "number"}
+        year: {type: "integer", exclusiveMinimum: 0},
+        id: {type: "integer", exclusiveMinimum: 0}
     },
-    required: ["make", "model", "year"]
+    required: ["make", "model", "year", "id"]
 }
-
 
 
 
@@ -23,10 +33,10 @@ const vehicleSchema = {
 const entrySchema = {
     type: "object",
     properties: {
-        date: {type: "number"},
+        date: {type: "integer", exclusiveMinimum: 0},
         description: {type: "string"},
-        cost: {type: "number"},
-        mileage: {type: "number"},
+        cost: {type: "integer", inclusiveMinimum: 0},
+        mileage: {type: "integer", exclusiveMinimum: 0},
         mechanic: {type: "string"},
         category: {type: "string"},
         notes: {type: "string"},
@@ -36,6 +46,7 @@ const entrySchema = {
 
 //export schemas
 module.exports = {
+    newVehicleSchema,
     vehicleSchema,
     entrySchema
 };
