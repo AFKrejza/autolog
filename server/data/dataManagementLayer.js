@@ -28,7 +28,7 @@ async function createVehicle (data) {
 
     allVehicles.push(data);
 
-    await fs.promises.writeFile('./data/vehicles.json', JSON.stringify(allVehicles), {encoding: "utf-8"});
+    await writeVehicles(allVehicles);
 }
 
 //read ALL vehicles
@@ -39,6 +39,11 @@ async function readVehicles () {
         return 0;
     }
     return await JSON.parse(allVehicles);
+}
+
+//write to vehicles
+async function writeVehicles(allVehicles) {
+    await fs.promises.writeFile('./data/vehicles.json', JSON.stringify(allVehicles), {encoding: "utf-8"});
 }
 
 function newID (allVehicles) {
@@ -57,8 +62,7 @@ function newID (allVehicles) {
 
 //TODO: just use the readVehicles function
 async function readVehicle (ID) {
-    const allVehicle = await fs.promises.readFile(vehicles); //clean this up
-    const allVehicles = JSON.parse(allVehicle);
+    const allVehicles = await readVehicles();
 
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
@@ -70,20 +74,38 @@ async function readVehicle (ID) {
 //TODO: very similar to readVehicle function, make a new function
 //import, then delete the element, then write the whole thing to vehicles.json again
 async function deleteVehicle (ID) {
-    const allVehicle = await fs.promises.readFile(vehicles); //clean this up
-    const allVehicles = JSON.parse(allVehicle);
+    const allVehicles = await readVehicles();
 
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
     console.log("vehicleIndex: " + vehicleIndex);
     allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
 
-    await fs.promises.writeFile('./data/vehicles.json', JSON.stringify(allVehicles), {encoding: "utf-8"});
+    await writeVehicles(allVehicles);
     //console.log("deleted vehicle");
     //return returnVehicle; //this returns a copy?
 }
 
+//update vehicle
+//it'll send the updated vehicle with all the info
+//
+async function updateVehicle (updated) {
+    const allVehicles = await readVehicles(); //TODO: use this everywhere, make a importVehicles function instead of copy/pasting it
+    
+    //check if vehicle exists by finding vehicle.id
+    const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === updated.id); //TODO: does this need an await?
+    //if it was found. then replace.
+    //TODO: add ajv to check that the ID is greater than 0
+    if (vehicleIndex >= 0) {
+        allVehicles[vehicleIndex] = updated;
+    }
+    await writeVehicles(allVehicles);
+}
+
+
+
 module.exports.createVehicle = createVehicle;
+module.exports.deleteVehicle = deleteVehicle;
 module.exports.readVehicles = readVehicles;
 module.exports.readVehicle = readVehicle;
-module.exports.deleteVehicle = deleteVehicle;
+module.exports.updateVehicle = updateVehicle;

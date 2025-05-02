@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const {vehicleSchema, entrySchema} = require("../schemas");
+const {newVehicleSchema, vehicleSchema} = require("../schemas");
 const Ajv = require("ajv").default
 const app = express;
 
@@ -16,30 +16,42 @@ const rootPath = path.dirname(require.main.filename);
 const dataPath = path.join(rootPath, "data");
 const vehicles = path.join(dataPath, "vehicles.json");
 
+const ajv = new Ajv({ removeAdditional: "all" });
+
 //see if ajv validation works:
 //full route: http://localhost:3000/vehicles/create
 //CREATE NEW VEHICLE
 router.post("/create", async (req, res) => {
-    const ajv = new Ajv();
     
-    //debug, leave this here for now
-    //console.log("Schema:", vehicleSchema);
-    //console.log("Request Body:", req.body);
     //TODO: add a log later
 
-    const valid = ajv.validate(vehicleSchema, req.body);
+    const valid = ajv.validate(newVehicleSchema, req.body);
 
     if (valid) {
-        //res.json(req.body)
-        //call create function in data/dataManagementLayer.js
-        //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
-        //TODO: add proper codes, e.g. missing year: correct code plus message
-        await dml.createVehicle(req.body);
-        res.status(201).send("Vehicle created"); //stringify and return the created vehicle
-        console.log("Vehicle created")
+        try{
+            //call create function in data/dataManagementLayer.js
+            //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
+            //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
+            await dml.createVehicle(req.body);
+            res.status(201).send(req.body); //stringify and return the created vehicle
+            console.log("Vehicle created")
+        }
+        catch (error) {
+            res.status(400).send("Error: " + ajv.errors.map(err => {
+                const field = err.instancePath.replace("/", "") || "(root)";
+                return `${field} ${err.message}`;
+            }));
+            console.log("Error in vehicle creation");
+        }
+        
     }
     else {
-        res.status(400).send(ajv.errors);
+        res.status(400).send("Error: " + ajv.errors.map(err => {
+            const field = err.instancePath.replace("/", "") || "(root)"; //remove first / to get property path
+            return `${field} ${err.message}`;
+            //only displays one error at a time
+        }));
+        console.log("Error in vehicle creation");
     }
 })
 
@@ -64,6 +76,19 @@ router.get("/list", async (req, res) => {
 router.delete("/delete", async (req, res) => {
     const vehicle = await dml.deleteVehicle(req.body.id);
     res.status(200).send("deleted vehicle"); //TODO: this doesn't verify the deletion
+})
+
+//update vehicle by ID
+//it'll send the updated vehicle with all the info
+//get vehicle, then patch
+router.patch("/update", async (req, res) => {
+
+    const valid = ajv.validate(vehicleSchema, req.body);
+
+    if (valid) {
+        await dml.updateVehicle(req.body);
+    }
+    res.status(200).send(req.body);
 })
 
 //exports the routes
