@@ -32,8 +32,15 @@ router.post("/create", async (req, res) => {
             //call create function in data/dataManagementLayer.js
             //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
             //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
-            await dml.createVehicle(req.body);
-            res.status(201).send(req.body); //stringify and return the created vehicle
+            const vehicle = await dml.createVehicle(req.body);
+
+            if (vehicle != req.body) { //if additional properties were removed
+                res.status(203).send(req.body); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (show message and display vehicle where needed?).
+            }
+            else {
+                res.status(201).send(req.body);
+            }
+            
             console.log("Vehicle created")
         }
         catch (error) {
