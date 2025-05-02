@@ -33,6 +33,25 @@ const vehicleSchema = {
 const entrySchema = {
     type: "object",
     properties: {
+        vehicleId: {type: "integer", exclusiveMinimum: 0},
+
+        date: {type: "integer", exclusiveMinimum: 0},
+        description: {type: "string"},
+        cost: {type: "integer", inclusiveMinimum: 0},
+        mileage: {type: "integer", exclusiveMinimum: 0},
+        mechanic: {type: "string"},
+        category: {type: "string"},
+        notes: {type: "string"},
+        id: {type: "integer"}
+    },
+    required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes", "id",]
+}
+
+const newEntrySchema = {
+    type: "object",
+    properties: {
+        vehicleId: {type: "integer", exclusiveMinimum: 0},
+
         date: {type: "integer", exclusiveMinimum: 0},
         description: {type: "string"},
         cost: {type: "integer", inclusiveMinimum: 0},
@@ -41,13 +60,14 @@ const entrySchema = {
         category: {type: "string"},
         notes: {type: "string"},
     },
-    required: ["date", "description", "cost", "mileage", "mechanic", "category", "notes"]
+    required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes"]
 }
 
 //export schemas
 module.exports = {
     newVehicleSchema,
     vehicleSchema,
+    newEntrySchema,
     entrySchema
 };
 

@@ -7,6 +7,7 @@ const path = require("path");
 const rootPath = path.dirname(require.main.filename);
 const dataPath = path.join(rootPath, "data");
 const vehicles = path.join(dataPath, "vehicles.json");
+const entries = path.join(dataPath, "entries.json");
 
 //in uu github, stringify and utf-8 encoding is used. check why.
 //async makes it return a promise
@@ -102,10 +103,56 @@ async function updateVehicle (updated) {
     await writeVehicles(allVehicles);
 }
 
+//ENTRIES
 
+async function readEntries () {
+    const allEntries = await fs.promises.readFile(entries);
+    //if it's empty, it will crash when trying to parse it
+    if (allEntries.length == 0) {
+        return 0;
+    }
+    return await JSON.parse(allEntries);
+}
+
+//write to vehicles
+async function writeEntries(allEntries) {
+    await fs.promises.writeFile('./data/entries.json', JSON.stringify(allentries), {encoding: "utf-8"});
+}
+
+
+
+
+//import vehicle list, check if data.vehicleId matches a vehicle
+//then create new entry, add vehicleId to it
+//assign it an id
+//TODO: decide if/how I'll sort them: linked list, by date YYYYMMDD?
+async function createEntry (data) {
+    const allVehicles = await readVehicles();
+    
+    //add ID to each entry, go through all existing ones, start at id 1
+    let id = 1;
+    const list = await readVehicles();
+    if (oldList != 0) {
+        allVehicles.push(...oldList);
+        id = newID(allVehicles);
+    }
+    
+    data.id = id;
+    //console.log(data.id); debug
+
+    allVehicles.push(data);
+
+    await writeVehicles(allVehicles);
+}
 
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
 module.exports.readVehicles = readVehicles;
 module.exports.readVehicle = readVehicle;
 module.exports.updateVehicle = updateVehicle;
+
+module.exports.createEntry = createEntry;
+module.exports.deleteEntry = deleteEntry;
+module.exports.readEntries = readEntries;
+module.exports.readEntry = readEntry;
+module.exports.updateEntry = updateEntry;

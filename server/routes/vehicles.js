@@ -3,8 +3,8 @@
 const express = require("express");
 const router = express.Router();
 const {newVehicleSchema, vehicleSchema} = require("../schemas");
-const Ajv = require("ajv").default
-const app = express;
+const Ajv = require("ajv").default;
+//const app = express;
 
 //import dataManagementLayer exports
 const dml = require("../data/dataManagementLayer");
@@ -28,7 +28,7 @@ router.post("/create", async (req, res) => {
     const valid = ajv.validate(newVehicleSchema, req.body);
 
     if (valid) {
-        try{
+        try {
             //call create function in data/dataManagementLayer.js
             //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
             //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
