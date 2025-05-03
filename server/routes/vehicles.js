@@ -44,10 +44,7 @@ router.post("/create", async (req, res) => {
             console.log("Vehicle created")
         }
         catch (error) {
-            res.status(400).send("Error: " + ajv.errors.map(err => {
-                const field = err.instancePath.replace("/", "") || "(root)";
-                return `${field} ${err.message}`;
-            }));
+            res.status(400).send("Error in vehicle creation: " + error);
             console.log("Error in vehicle creation");
         }
         
@@ -97,11 +94,8 @@ router.patch("/update", async (req, res) => {
             await dml.updateVehicle(req.body);
         }
         catch (error) {
-            res.status(400).send("Error: " + ajv.errors.map(err => {
-                const field = err.instancePath.replace("/", "") || "(root)";
-                return `${field} ${err.message}`;
-            }));
-            console.log("Error in vehicle updating");
+            res.status(400).send("Error in vehicle updating: " + error);
+            console.log("Error in vehicle updating: " + error);
         }
     }
     else if (!valid) {

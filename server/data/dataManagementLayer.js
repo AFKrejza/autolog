@@ -104,7 +104,6 @@ async function updateVehicle (updated) {
     //check if vehicle exists by finding vehicle.id
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === updated.id); //TODO: does this need an await?
     //if it was found. then replace.
-    //TODO: add ajv to check that the ID is greater than 0
     if (vehicleIndex >= 0) {
         allVehicles[vehicleIndex].make = updated.make;
         allVehicles[vehicleIndex].model = updated.model;
@@ -167,6 +166,12 @@ async function createEntry (entry) {
         entry.updatedAt = dateNow();
         allEntries.push(entry);
         await writeEntries(allEntries);
+
+        //update vehicle updatedAt to current date, find index of vehicle
+        const allVehicles = await readVehicles();
+        vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === entry.vehicleId);
+        allVehicles[vehicleIndex].updatedAt = dateNow();
+        await writeVehicles(allVehicles);
     }
     
 }

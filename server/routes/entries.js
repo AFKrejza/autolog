@@ -28,17 +28,12 @@ router.post("/create", async (req, res) => {
             else {
                 res.status(201).send(req.body);
             }
-
             console.log("Entry created");
         }
         catch (error) {
-            res.status(400).send("Error: " + ajv.errors.map(err => {
-                const field = err.instancePath.replace("/", "") || "(root)";
-                return `${field} ${err.message}`;
-            }));
-            console.log("Error in entry creation");
+            console.log("Error in entry creation: " + error);
+            res.status(400).send("Error in entry creation: " + error);
         }
-        
     }
     else {
         res.status(400).send("Error: " + ajv.errors.map(err => {
