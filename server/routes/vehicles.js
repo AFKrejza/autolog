@@ -59,16 +59,6 @@ router.post("/create", async (req, res) => {
     }
 })
 
-//get vehicle by ID
-// added async before (req,res) to use await inside the function
-router.get("/get", async (req, res) => {
-    //req.body.id = id value. TODO: make sure (validate) it's an int - check here or use ajv schema for id.
-    const getVehicle = await dml.readVehicle(req.body.id);
-    console.log(getVehicle);
-    res.status(200).send(getVehicle);
-    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
-})
-
 //list all vehicles
 router.get("/list", async (req, res) => {
     const list = await dml.readVehicles();
@@ -108,6 +98,26 @@ router.patch("/update", async (req, res) => {
     const returnVehicle = await dml.readVehicle(req.body.id);
     //console.log(returnVehicle);
     res.status(200).send(returnVehicle);
+})
+
+//get vehicle by ID
+// added async before (req,res) to use await inside the function
+router.get("/:id", async (req, res) => {
+    //req.params.id: TODO: make sure (validate) it's an int - check here or use ajv schema for id.
+    try {
+        const getVehicle = await dml.readVehicle(req.params.id);
+        if (getVehicle == -1) {
+            res.status(404).send("Error 404: Vehicle not found");
+        }
+        else {
+            res.status(200).send(getVehicle);
+        }
+    }
+    catch (error) {
+        res.status(400).send("Error: " + error);
+    }
+    //console.log(getVehicle);
+    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
 
 //exports the routes

@@ -69,15 +69,18 @@ function newID (allVehicles) {
 
 //consider modifying readVehicles to just read each vehicle by ID
 //function reads vehicle by requested ID and returns the whole vehicle object
-
-//TODO: just use the readVehicles function
 async function readVehicle (ID) {
     const allVehicles = await readVehicles();
 
     //find index of ID vehicle, return vehicle at index
-    const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
-    const returnVehicle = allVehicles[vehicleIndex];
-    return await returnVehicle; //this returns a copy?
+    const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id == ID);
+    if (vehicleIndex >= 0) {
+        const returnVehicle = allVehicles[vehicleIndex];
+        return returnVehicle; //this returns a copy?
+    }
+    else {
+        return -1;
+    }
 }
 
 //delete vehicle by finding ID, then delete that index
