@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const {newVehicleSchema, updateVehicleSchema, vehicleSchema} = require("../schemas");
+const {newVehicleSchema, updateVehicleSchema, vehicleSchema, entrySchema, newEntrySchema, updateEntrySchema} = require("../schemas");
 const Ajv = require("ajv").default;
 //const app = express;
 

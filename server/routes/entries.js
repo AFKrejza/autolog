@@ -25,7 +25,7 @@ router.post("/create", async (req, res) => {
             const entry = await dml.createEntry(req.body);
 
             if (entry != req.body) { //if additional properties were removed
-                res.status(203).send(req.body); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (show message and display entry where needed?).
+                res.status(203).send(req.body); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (add message and display entry where needed?).
             }
             else {
                 res.status(201).send(req.body);

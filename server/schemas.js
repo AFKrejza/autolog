@@ -48,7 +48,6 @@ const entrySchema = {
     type: "object",
     properties: {
         vehicleId: {type: "integer", exclusiveMinimum: 0},
-
         date: {type: "integer", exclusiveMinimum: 0},
         description: {type: "string"},
         cost: {type: "integer", inclusiveMinimum: 0},
@@ -56,16 +55,17 @@ const entrySchema = {
         mechanic: {type: "string"},
         category: {type: "string"},
         notes: {type: "string"},
-        id: {type: "integer"}
+        id: {type: "integer"},
+        createdAt: {type: "string"},
+        updatedAt:{type: "string"}
     },
-    required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes", "id",]
+    required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes", "id", "createdAt", "updatedAt"]
 }
 
 const newEntrySchema = {
     type: "object",
     properties: {
         vehicleId: {type: "integer", exclusiveMinimum: 0},
-
         date: {type: "integer", exclusiveMinimum: 0},
         description: {type: "string"},
         cost: {type: "integer", inclusiveMinimum: 0},
@@ -77,13 +77,31 @@ const newEntrySchema = {
     required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes"]
 }
 
+const updateEntrySchema = {
+    type: "object",
+    properties: {
+        vehicleId: {type: "integer", exclusiveMinimum: 0},
+        date: {type: "integer", exclusiveMinimum: 0},
+        description: {type: "string"},
+        cost: {type: "integer", inclusiveMinimum: 0},
+        mileage: {type: "integer", exclusiveMinimum: 0},
+        mechanic: {type: "string"},
+        category: {type: "string"},
+        notes: {type: "string"},
+        id: {type: "integer"},
+    },
+    required: ["vehicleId", "date", "description", "cost", "mileage", "mechanic", "category", "notes", "id"]
+}
+
+
 //export schemas
 module.exports = {
     newVehicleSchema,
     updateVehicleSchema,
     vehicleSchema,
     newEntrySchema,
-    entrySchema
+    entrySchema,
+    updateEntrySchema
 };
 
 //TODO: fix see if I can convert the date, or if this is a frontend thing, or figure out how it's meant to work. FOR NOW: take input as DDMMYYYY ??
