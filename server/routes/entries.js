@@ -45,6 +45,12 @@ router.post("/create", async (req, res) => {
     }
 })
 
+//lists ALL entries
+router.get("/list", async (req, res) => {
+    const list = await dml.readEntries();
+    res.status(200).send(list);
+})
+
 
 
 //first validate, then check if id exists, otherwise return 400

@@ -120,6 +120,17 @@ async function updateVehicle (updated) {
 
 //ENTRIES
 
+//sort entries - call this whenever an entry is created, updated, or deleted, or when a vehicle is deleted
+//ascending order
+async function sortEntries() {
+    let allEntries = await readEntries();
+
+    //convert to Date objects
+    await allEntries.sort((a, b) => new Date(b.date) - new Date(a.date)); //- before, + after
+
+    await writeEntries(allEntries);
+}
+
 async function readEntries () {
     const allEntries = await fs.promises.readFile(entries);
     //if it's empty, it will crash when trying to parse it
@@ -166,6 +177,7 @@ async function createEntry (entry) {
         entry.updatedAt = dateNow();
         allEntries.push(entry);
         await writeEntries(allEntries);
+        await sortEntries();
 
         //update vehicle updatedAt to current date, find index of vehicle
         const allVehicles = await readVehicles();
