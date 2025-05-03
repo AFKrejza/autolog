@@ -9,9 +9,16 @@ const dataPath = path.join(rootPath, "data");
 const vehicles = path.join(dataPath, "vehicles.json");
 const entries = path.join(dataPath, "entries.json");
 
-//in uu github, stringify and utf-8 encoding is used. check why.
-//async makes it return a promise
-//use try and catch
+//shared functions
+
+//returns today's date in YYYY-MM-DD
+function dateNow() {
+    const date = new Date().toJSON().slice(0,10);
+    return date;
+}
+
+//TODO: put newID here and let vehicles and entries use it
+
 //it needs to import vehicles.json via readfile, THEN add data, THEN writefile
 async function createVehicle (data) {
     const allVehicles = [];
@@ -25,10 +32,13 @@ async function createVehicle (data) {
     }
     
     data.id = id;
+    data.createdAt = dateNow();
+    data.updatedAt = dateNow();
     //console.log(data.id); debug
 
     allVehicles.push(data);
-
+    //let now = dateNow();
+    //console.log(now);
     await writeVehicles(allVehicles);
 }
 
@@ -68,7 +78,7 @@ async function readVehicle (ID) {
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
     const returnVehicle = allVehicles[vehicleIndex];
-    return returnVehicle; //this returns a copy?
+    return await returnVehicle; //this returns a copy?
 }
 
 //delete vehicle by finding ID, then delete that index
@@ -89,19 +99,27 @@ async function deleteVehicle (ID) {
 
 //update vehicle
 //it'll send the updated vehicle with all the info
-//
 async function updateVehicle (updated) {
-    const allVehicles = await readVehicles(); //TODO: use this everywhere, make a importVehicles function instead of copy/pasting it
+    console.log("debug");
+    const allVehicles = await readVehicles();
     
     //check if vehicle exists by finding vehicle.id
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === updated.id); //TODO: does this need an await?
     //if it was found. then replace.
     //TODO: add ajv to check that the ID is greater than 0
     if (vehicleIndex >= 0) {
-        allVehicles[vehicleIndex] = updated;
+        allVehicles[vehicleIndex].make = updated.make;
+        allVehicles[vehicleIndex].model = updated.model;
+        allVehicles[vehicleIndex].year = updated.year;
+        allVehicles[vehicleIndex].updatedAt = dateNow();
     }
     await writeVehicles(allVehicles);
+    console.log("Updated vehicle");
 }
+
+
+
+
 
 //ENTRIES
 
@@ -125,7 +143,7 @@ async function writeEntries(allEntries) {
 //import vehicle list, check if data.vehicleId matches a vehicle
 //then create new entry, add vehicleId to it
 //assign it an id
-//TODO: decide if/how I'll sort them: linked list, by date YYYYMMDD?
+//TODO: decide how to sort them: by date
 async function createEntry (data) {
     const allVehicles = await readVehicles();
     
@@ -152,7 +170,7 @@ module.exports.readVehicle = readVehicle;
 module.exports.updateVehicle = updateVehicle;
 
 module.exports.createEntry = createEntry;
-module.exports.deleteEntry = deleteEntry;
+//module.exports.deleteEntry = deleteEntry;
 module.exports.readEntries = readEntries;
-module.exports.readEntry = readEntry;
-module.exports.updateEntry = updateEntry;
+//module.exports.readEntry = readEntry;
+//module.exports.updateEntry = updateEntry;

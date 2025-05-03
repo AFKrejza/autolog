@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const {newVehicleSchema, vehicleSchema} = require("../schemas");
+const {newVehicleSchema, updateVehicleSchema, vehicleSchema} = require("../schemas");
 const Ajv = require("ajv").default;
 //const app = express;
 
@@ -90,12 +90,30 @@ router.delete("/delete", async (req, res) => {
 //get vehicle, then patch
 router.patch("/update", async (req, res) => {
 
-    const valid = ajv.validate(vehicleSchema, req.body);
+    const valid = ajv.validate(updateVehicleSchema, req.body); //only include make,model,year,id
 
     if (valid) {
-        await dml.updateVehicle(req.body);
+        try{
+            await dml.updateVehicle(req.body);
+        }
+        catch (error) {
+            res.status(400).send("Error: " + ajv.errors.map(err => {
+                const field = err.instancePath.replace("/", "") || "(root)";
+                return `${field} ${err.message}`;
+            }));
+            console.log("Error in vehicle updating");
+        }
     }
-    res.status(200).send(req.body);
+    else if (!valid) {
+        res.status(400).send("Error: " + ajv.errors.map(err => {
+            const field = err.instancePath.replace("/", "") || "(root)";
+            return `${field} ${err.message}`;
+        }));
+        console.log("Error in vehicle updating");
+    }
+    const returnVehicle = await dml.readVehicle(req.body.id);
+    console.log(returnVehicle);
+    res.status(200).send(returnVehicle);
 })
 
 //exports the routes

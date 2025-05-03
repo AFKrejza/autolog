@@ -20,7 +20,21 @@ const vehicleSchema = {
         make: {type: "string"},
         model: {type: "string"},
         year: {type: "integer", exclusiveMinimum: 0},
-        id: {type: "integer", exclusiveMinimum: 0}
+        id: {type: "integer", exclusiveMinimum: 0},
+        createdAt: {type: "string"},
+        updatedAt: {type: "string"}
+    },
+    required: ["make", "model", "year", "id", "createdAt", "updatedAt"]
+}
+
+const updateVehicleSchema = {
+    type: "object",
+    properties: {
+        make: {type: "string"},
+        model: {type: "string"},
+        year: {type: "integer", exclusiveMinimum: 0},
+        id: {type: "integer", exclusiveMinimum: 0},
+        
     },
     required: ["make", "model", "year", "id"]
 }
@@ -66,6 +80,7 @@ const newEntrySchema = {
 //export schemas
 module.exports = {
     newVehicleSchema,
+    updateVehicleSchema,
     vehicleSchema,
     newEntrySchema,
     entrySchema
