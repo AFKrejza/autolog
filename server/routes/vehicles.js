@@ -2,7 +2,7 @@
 
 const express = require("express");
 const router = express.Router();
-const {newVehicleSchema, updateVehicleSchema, vehicleSchema, entrySchema, newEntrySchema, updateEntrySchema} = require("../schemas");
+const {newVehicleSchema, updateVehicleSchema, vehicleSchema} = require("../schemas");
 const Ajv = require("ajv").default;
 //const app = express;
 
@@ -82,7 +82,7 @@ router.get("/list", async (req, res) => {
 //get ID like in get, then delete that index
 router.delete("/delete", async (req, res) => {
     const vehicle = await dml.deleteVehicle(req.body.id);
-    res.status(200).send("deleted vehicle"); //TODO: this doesn't verify the deletion
+    res.status(200).send("Deleted vehicle"); //TODO: this doesn't verify the deletion
 })
 
 //update vehicle by ID
@@ -112,7 +112,7 @@ router.patch("/update", async (req, res) => {
         console.log("Error in vehicle updating");
     }
     const returnVehicle = await dml.readVehicle(req.body.id);
-    console.log(returnVehicle);
+    //console.log(returnVehicle);
     res.status(200).send(returnVehicle);
 })
 

@@ -34,7 +34,6 @@ async function createVehicle (data) {
     data.id = id;
     data.createdAt = dateNow();
     data.updatedAt = dateNow();
-    //console.log(data.id); debug
 
     allVehicles.push(data);
     //let now = dateNow();
@@ -89,18 +88,17 @@ async function deleteVehicle (ID) {
 
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
-    console.log("vehicleIndex: " + vehicleIndex);
+    //console.log("delete vehicle index: " + vehicleIndex);
     allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
 
     await writeVehicles(allVehicles);
-    //console.log("deleted vehicle");
+    console.log("deleted vehicle");
     //return returnVehicle; //this returns a copy?
 }
 
 //update vehicle
 //it'll send the updated vehicle with all the info
 async function updateVehicle (updated) {
-    console.log("debug");
     const allVehicles = await readVehicles();
     
     //check if vehicle exists by finding vehicle.id
@@ -132,35 +130,45 @@ async function readEntries () {
     return await JSON.parse(allEntries);
 }
 
-//write to vehicles
+//write to entries.json
 async function writeEntries(allEntries) {
-    await fs.promises.writeFile('./data/entries.json', JSON.stringify(allentries), {encoding: "utf-8"});
+    await fs.promises.writeFile('./data/entries.json', JSON.stringify(allEntries), {encoding: "utf-8"});
 }
 
-
-
+//check if vehicle exists
+async function vehicleCheck(vId) {
+    const allVehicles = await readVehicles();
+    for (let i = 0, j = allVehicles.length; i < j; i++) {
+        if (allVehicles[i].id == vId) {
+            return true;
+        }
+    }
+    return false;
+}
 
 //import vehicle list, check if data.vehicleId matches a vehicle
 //then create new entry, add vehicleId to it
 //assign it an id
 //TODO: decide how to sort them: by date
-async function createEntry (data) {
-    const allVehicles = await readVehicles();
-    
+async function createEntry (entry) {
+    const allEntries = [];
     //add ID to each entry, go through all existing ones, start at id 1
-    let id = 1;
-    const list = await readVehicles();
-    if (oldList != 0) {
-        allVehicles.push(...oldList);
-        id = newID(allVehicles);
+    //console.log("vid: " + entry.vehicleId); debug
+    let vehicleExists = vehicleCheck(entry.vehicleId); //bool
+    if (vehicleExists) {
+        let id = 1;
+        const list = await readEntries();
+        if (list != 0) {
+            allEntries.push(...list);
+            id = newID(allEntries);
+        }
+        entry.id = id;
+        entry.createdAt = dateNow();
+        entry.updatedAt = dateNow();
+        allEntries.push(entry);
+        await writeEntries(allEntries);
     }
     
-    data.id = id;
-    //console.log(data.id); debug
-
-    allVehicles.push(data);
-
-    await writeVehicles(allVehicles);
 }
 
 module.exports.createVehicle = createVehicle;
