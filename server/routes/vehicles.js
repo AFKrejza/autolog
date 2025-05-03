@@ -69,6 +69,10 @@ router.get("/list", async (req, res) => {
 //get ID like in get, then delete that index
 router.delete("/delete", async (req, res) => {
     const vehicle = await dml.deleteVehicle(req.body.id);
+    if (vehicle == -1 || vehicle < 0) {
+        res.status(404).send("Error 404: Vehicle not found");
+        return;
+    }
     res.status(200).send("Deleted vehicle"); //TODO: this doesn't verify the deletion
 })
 

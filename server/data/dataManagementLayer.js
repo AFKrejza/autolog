@@ -91,6 +91,7 @@ async function deleteVehicle (ID) {
 
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
+    if (vehicleIndex == -1 || vehicleIndex < 0) return -1;
     //console.log("delete vehicle index: " + vehicleIndex);
     allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
 
@@ -127,7 +128,9 @@ async function updateVehicle (updated) {
 //ascending order
 async function sortEntries() {
     let allEntries = await readEntries();
-
+    if (allEntries == -1) {
+        return -1;
+    }
     //convert to Date objects
     await allEntries.sort((a, b) => new Date(b.date) - new Date(a.date)); //- before, + after
 
@@ -138,7 +141,7 @@ async function readEntries () {
     const allEntries = await fs.promises.readFile(entries);
     //if it's empty, it will crash when trying to parse it
     if (allEntries.length == 0) {
-        return 0;
+        return 0; //don't try changing this again.
     }
     return await JSON.parse(allEntries);
 }
@@ -148,16 +151,35 @@ async function writeEntries(allEntries) {
     await fs.promises.writeFile('./data/entries.json', JSON.stringify(allEntries), {encoding: "utf-8"});
 }
 
-//check if vehicle exists
+//check if vehicle exists and return index of vehicle!
 async function vehicleCheck(vId) {
     const allVehicles = await readVehicles();
     for (let i = 0, j = allVehicles.length; i < j; i++) {
         if (allVehicles[i].id == vId) {
-            return true;
+            return i;
         }
     }
-    return false;
+    return -1;
 }
+
+//function reads entry by requested ID and returns the whole entry object
+async function readEntry (ID) {
+    const allEntries = await readEntries();
+    if (allEntries == 0) {
+        return -2;
+    }
+
+    //find index of ID entry, return entry at index
+    const entryIndex = allEntries.findIndex(entry => entry.id == ID);
+    if (entryIndex >= 0) {
+        const returnEntry = allEntries[entryIndex];
+        return returnEntry; //this returns a copy?
+    }
+    else {
+        return -1;
+    }
+}
+
 
 //import vehicle list, check if data.vehicleId matches a vehicle
 //then create new entry, add vehicleId to it
@@ -166,30 +188,58 @@ async function vehicleCheck(vId) {
 async function createEntry (entry) {
     const allEntries = [];
     //add ID to each entry, go through all existing ones, start at id 1
-    //console.log("vid: " + entry.vehicleId); debug
-    let vehicleExists = vehicleCheck(entry.vehicleId); //bool
-    if (vehicleExists) {
-        let id = 1;
-        const list = await readEntries();
-        if (list != 0) {
-            allEntries.push(...list);
-            id = newID(allEntries);
-        }
-        entry.id = id;
-        entry.createdAt = dateNow();
-        entry.updatedAt = dateNow();
-        allEntries.push(entry);
-        await writeEntries(allEntries);
-        await sortEntries();
+    const vehicleIndex = await vehicleCheck(entry.vehicleId);
+    if (vehicleIndex == -1 || vehicleIndex < 0) {
+        return -1;
+    }
+    let id = 1;
+    const list = await readEntries();
+    if (list < 0) {
+        return -2;
+    }
+    allEntries.push(...list);
+    id = newID(allEntries);
+    entry.id = id;
+    entry.createdAt = dateNow();
+    entry.updatedAt = dateNow();
+    allEntries.push(entry);
+    await writeEntries(allEntries);
+    await sortEntries();
+    //update vehicle updatedAt to current date, find index of vehicle
+    const allVehicles = await readVehicles();
+    //const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === entry.vehicleId);
+    allVehicles[vehicleIndex].updatedAt = dateNow(); //TODO: fix bug here
+    await writeVehicles(allVehicles);
+    return vehicleIndex;
+}
 
-        //update vehicle updatedAt to current date, find index of vehicle
-        const allVehicles = await readVehicles();
-        vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === entry.vehicleId);
-        allVehicles[vehicleIndex].updatedAt = dateNow();
-        await writeVehicles(allVehicles);
+//update entry, sends the updated vehicle with all the info
+async function updateEntry (updated) {
+    const allEntries = await readEntries();
+    if (allEntries == 0) return -1;
+    //check vehicleId
+    const vehicleIndex = await vehicleCheck(updated.vehicleId);
+    if (vehicleIndex == -1 || vehicleIndex < 0) {
+        return -2;
     }
     
+    //check if entry exists by finding entry.id
+    const entryIndex = allEntries.findIndex(entry => entry.id == updated.id && entry.vehicleId == updated.vehicleId); //TODO: does this need an await?
+    //if the entry was found: replace.
+    if (entryIndex >= 0) {
+        allEntries[entryIndex].date = updated.date;
+        allEntries[entryIndex].description = updated.description;
+        allEntries[entryIndex].cost = updated.cost;
+        allEntries[entryIndex].mileage = updated.mileage;
+        allEntries[entryIndex].mechanic = updated.mechanic;
+        allEntries[entryIndex].category = updated.category;
+        allEntries[entryIndex].notes = updated.notes;
+        allEntries[entryIndex].updatedAt = dateNow();
+    }
+    await writeEntries(allEntries);
+    console.log("Updated entry");
 }
+
 
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
@@ -200,5 +250,5 @@ module.exports.updateVehicle = updateVehicle;
 module.exports.createEntry = createEntry;
 //module.exports.deleteEntry = deleteEntry;
 module.exports.readEntries = readEntries;
-//module.exports.readEntry = readEntry;
-//module.exports.updateEntry = updateEntry;
+module.exports.readEntry = readEntry;
+module.exports.updateEntry = updateEntry;

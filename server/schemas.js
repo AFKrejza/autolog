@@ -50,7 +50,7 @@ const entrySchema = {
         vehicleId: {type: "integer", exclusiveMinimum: 0},
         date: {type: "string"},
         description: {type: "string"},
-        cost: {type: "integer", inclusiveMinimum: 0},
+        cost: {type: "integer", exclusiveMinimum: -1},
         mileage: {type: "number", exclusiveMinimum: -1},
         mechanic: {type: "string"},
         category: {type: "string"},
@@ -83,7 +83,7 @@ const updateEntrySchema = {
         vehicleId: {type: "integer", exclusiveMinimum: 0},
         date: {type: "string"},
         description: {type: "string"},
-        cost: {type: "integer", inclusiveMinimum: 0},
+        cost: {type: "integer", exclusiveMinimum: -1},
         mileage: {type: "number", exclusiveMinimum: -1},
         mechanic: {type: "string"},
         category: {type: "string"},
@@ -95,7 +95,7 @@ const updateEntrySchema = {
 
 
 //export schemas
-module.exports = {
+module.exports = { //TODO: may need to be export default instead
     newVehicleSchema,
     updateVehicleSchema,
     vehicleSchema,

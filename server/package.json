@@ -14,6 +14,6 @@
     "express": "^5.1.0"
   },
   "nodemonConfig": {
-      "ignore": ["/data/vehicles.json", "/data/entries.json"]
+      "ignore": ["/data/vehicles.json", "/data/entries.json", "node_modules"]
   }
 }
