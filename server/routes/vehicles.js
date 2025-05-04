@@ -23,25 +23,25 @@ const ajv = new Ajv({ removeAdditional: "all" });
 //CREATE NEW VEHICLE
 router.post("/create", async (req, res) => {
     
-    //TODO: add a log later
-
-    const valid = ajv.validate(newVehicleSchema, req.body);
+    //req.body shouldn't be altered, only validateBody
+    const validatedBody = structuredClone(req.body);
+    const valid = ajv.validate(newVehicleSchema, validatedBody); //removes additional properties from req.body here
 
     if (valid) {
         try {
-            //call create function in data/dataManagementLayer.js
-            //TODO: This doesn't check if the code ran CORRECTLY, it only says "function called successfully". use try and catch.
             //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
-            const vehicle = await dml.createVehicle(req.body);
-
-            if (vehicle != req.body) { //if additional properties were removed
-                res.status(203).send(req.body); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (show message and display vehicle where needed?).
+            //compare validatedBody to req.body using JSON.stringify()
+            //this assumes the keys are in the same order (which they should be)
+            if (JSON.stringify(validatedBody) != JSON.stringify(req.body)) { //if additional properties were added or removed
+                const vehicle = await dml.createVehicle(validatedBody);
+                res.status(203).send(validatedBody); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (show message and display vehicle where needed?).
             }
-            else {
-                res.status(201).send(req.body);
+            else { //if nothing was changed
+                const vehicle = await dml.createVehicle(validatedBody);
+                res.status(201).send(validatedBody);
             }
             
-            console.log("Vehicle created")
+            console.log("Vehicle created");
         }
         catch (error) {
             res.status(400).send("Error in vehicle creation: " + error);
@@ -53,7 +53,7 @@ router.post("/create", async (req, res) => {
         res.status(400).send("Error: " + ajv.errors.map(err => {
             const field = err.instancePath.replace("/", "") || "(root)"; //remove first / to get property path
             return `${field} ${err.message}`;
-            //only displays one error at a time
+            //TODO: I think it only displays one error at a time. Probably not an issue?
         }));
         console.log("Error in vehicle creation");
     }

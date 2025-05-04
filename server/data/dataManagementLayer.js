@@ -22,6 +22,7 @@ function dateNow() {
 //it needs to import vehicles.json via readfile, THEN add data, THEN writefile
 async function createVehicle (data) {
     const allVehicles = [];
+
     
     //add ID to each vehicle, go through all existing ones, start at id 1
     let id = 1;
@@ -39,6 +40,7 @@ async function createVehicle (data) {
     //let now = dateNow();
     //console.log(now);
     await writeVehicles(allVehicles);
+    return data; //the created vehicle and all its additional properties
 }
 
 //read ALL vehicles
