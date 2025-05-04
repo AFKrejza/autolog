@@ -237,6 +237,7 @@ async function updateEntry (updated) {
         allEntries[entryIndex].updatedAt = dateNow();
     }
     await writeEntries(allEntries);
+    await sortEntries();
     console.log("Updated entry");
 }
 
