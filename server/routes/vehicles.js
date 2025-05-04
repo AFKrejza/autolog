@@ -68,12 +68,18 @@ router.get("/list", async (req, res) => {
 //delete selected vehicle by ID
 //get ID like in get, then delete that index
 router.delete("/delete", async (req, res) => {
+    //TODO: use this code everywhere! verify request body/params
+    const id = parseInt(req.body.id, 10);
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).send({ error: "Invalid ID: Must be positive integer" });
+    }
+
     const vehicle = await dml.deleteVehicle(req.body.id);
     if (vehicle == -1 || vehicle < 0) {
         res.status(404).send("Error 404: Vehicle not found");
         return;
     }
-    res.status(200).send("Deleted vehicle"); //TODO: this doesn't verify the deletion
+    res.status(200).send("Deleted vehicle"); //TODO: this doesn't verify the deletion. Does it need to?
 })
 
 //update vehicle by ID
@@ -131,7 +137,7 @@ router.get("/:id", async (req, res) => {
 //get ALL vehicle entries by vehicle ID
 router.get("/:id/entries", async (req, res) => {
     //req.params.id: TODO: make sure (validate) it's an int - check here or use ajv schema for id.
-    let vId = parseInt(req.params.id);
+    let vId = parseInt(req.params.id, 10);
     if (vId <= 0 || isNaN(vId)) { //isNan: required because NaN always returns false when compared
         res.status(400).send({ error: "Error 400: Invalid vehicle ID: must be an integer > 0"})
         return;

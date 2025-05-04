@@ -93,12 +93,10 @@ async function deleteVehicle (ID) {
     //find index of ID vehicle, return vehicle at index
     const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === ID);
     if (vehicleIndex == -1 || vehicleIndex < 0) return -1;
-    //console.log("delete vehicle index: " + vehicleIndex);
     allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
-
+    await deleteVehicleEntries(ID);
     await writeVehicles(allVehicles);
-    console.log("deleted vehicle");
-    //return returnVehicle; //this returns a copy?
+    //console.log("deleted vehicle");
 }
 
 //update vehicle
@@ -197,10 +195,9 @@ async function createEntry (entry) {
     }
     let id = 1;
     const list = await readEntries();
-    if (list < 0) {
-        return -2;
+    if (list != 0) {
+        allEntries.push(...list);
     }
-    allEntries.push(...list);
     id = newID(allEntries);
     entry.id = id;
     entry.createdAt = dateNow();
@@ -243,7 +240,7 @@ async function updateEntry (updated) {
     console.log("Updated entry");
 }
 
-//delete entry by ID
+//delete ONE entry by ID
 async function deleteEntry (ID) {
     const allEntries = await readEntries();
 
@@ -273,7 +270,26 @@ async function readVehicleEntries (ID) {
     else return -2;
 }
 //TODO: figure out how to only send X entries at a time (to display ONLY e.g. 10, 20, 50, 100 entries), use new function since this sends ALL
+//or rewrite it to take an argument
 
+//delete ALL entries belonging to a vehicle
+async function deleteVehicleEntries (ID) {
+    const list = await readEntries();
+    let counter = 0;
+    if (list == 0) return -1;
+    for (let i = list.length - 1; i >= 0; i--) { //delete from last element, otherwise errors and skips happen
+        if (list[i].vehicleId == ID) {
+            list.splice(i, 1);
+            counter++;
+        }
+    }
+    if (counter > 0) {
+        console.log("deleted " + counter + " entries");
+        await writeEntries(list);
+        await sortEntries(); //inefficient, but works.
+    }
+    else return -2;
+}
 
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
@@ -281,6 +297,7 @@ module.exports.readVehicles = readVehicles;
 module.exports.readVehicle = readVehicle;
 module.exports.updateVehicle = updateVehicle;
 module.exports.readVehicleEntries = readVehicleEntries;
+module.exports.deleteVehicleEntries = deleteVehicleEntries;
 module.exports.vehicleCheck = vehicleCheck;
 
 module.exports.createEntry = createEntry;
