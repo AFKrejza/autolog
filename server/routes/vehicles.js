@@ -90,6 +90,7 @@ router.patch("/update", async (req, res) => {
         catch (error) {
             res.status(400).send("Error in vehicle updating: " + error);
             console.log("Error in vehicle updating: " + error);
+            return;
         }
     }
     else if (!valid) {
@@ -98,6 +99,7 @@ router.patch("/update", async (req, res) => {
             return `${field} ${err.message}`;
         }));
         console.log("Error in vehicle updating");
+        return;
     }
     const returnVehicle = await dml.readVehicle(req.body.id);
     //console.log(returnVehicle);
@@ -112,15 +114,52 @@ router.get("/:id", async (req, res) => {
         const getVehicle = await dml.readVehicle(req.params.id);
         if (getVehicle == -1) {
             res.status(404).send("Error 404: Vehicle not found");
+            return;
         }
         else {
             res.status(200).send(getVehicle);
+            return;
         }
     }
     catch (error) {
         res.status(400).send("Error: " + error);
     }
     //console.log(getVehicle);
+    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
+})
+
+//get ALL vehicle entries by vehicle ID
+router.get("/:id/entries", async (req, res) => {
+    //req.params.id: TODO: make sure (validate) it's an int - check here or use ajv schema for id.
+    let vId = parseInt(req.params.id);
+    if (vId <= 0 || isNaN(vId)) { //isNan: required because NaN always returns false when compared
+        res.status(400).send({ error: "Error 400: Invalid vehicle ID: must be an integer > 0"})
+        return;
+    }
+    try {
+        const getVehicle = await dml.vehicleCheck(vId);
+        if (getVehicle == -1) {
+            res.status(404).send("Error 404: Vehicle not found");
+            return;
+        }
+        else {
+            const entries = await dml.readVehicleEntries(vId);
+            if (entries == -1) {
+                res.status(500).send({ error: "Error 500: Database empty or inaccessible" });
+                console.log("Error 500: Database empty or inaccessible");
+                return;
+            }
+            if (entries == -2) {
+                res.status(500).send({ error: "Error 404: No entries found" });
+                console.log("Error 404: No entries found");
+                return;
+            }
+            res.status(200).send(entries);
+        }
+    }
+    catch (error) {
+        res.status(400).send("Error: " + error);
+    }
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
 

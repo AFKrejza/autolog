@@ -138,6 +138,7 @@ async function sortEntries() {
     await writeEntries(allEntries);
 }
 
+//returns ALL entries in the database
 async function readEntries () {
     const allEntries = await fs.promises.readFile(entries);
     //if it's empty, it will crash when trying to parse it
@@ -160,10 +161,11 @@ async function vehicleCheck(vId) {
             return i;
         }
     }
-    return -1;
+    return -1; //if not found
 }
 
 //function reads entry by requested ID and returns the whole entry object
+//Only returns ONE entry
 async function readEntry (ID) {
     const allEntries = await readEntries();
     if (allEntries == 0) {
@@ -254,12 +256,32 @@ async function deleteEntry (ID) {
     //works, but is inefficient as it deletes, writes, reads, sorts, writes instead of deletes, sorts, writes
 }
 
+//returns ALL entries belonging to a vehicle
+//TODO: use this function for calculating spending
+async function readVehicleEntries (ID) {
+    const list = await readEntries();
+    const vehicleEntries = [];
+    if (list == 0) return -1;
+    for (let i = 0, j = list.length; i < j; i++) {
+        if (list[i].vehicleId == ID) {
+            vehicleEntries.push(list[i]);
+        }
+    }
+    if (vehicleEntries.length > 0) {
+        return vehicleEntries;
+    }
+    else return -2;
+}
+//TODO: figure out how to only send X entries at a time (to display ONLY e.g. 10, 20, 50, 100 entries), use new function since this sends ALL
+
 
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
 module.exports.readVehicles = readVehicles;
 module.exports.readVehicle = readVehicle;
 module.exports.updateVehicle = updateVehicle;
+module.exports.readVehicleEntries = readVehicleEntries;
+module.exports.vehicleCheck = vehicleCheck;
 
 module.exports.createEntry = createEntry;
 module.exports.deleteEntry = deleteEntry;
