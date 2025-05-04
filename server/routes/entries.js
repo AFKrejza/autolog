@@ -106,6 +106,17 @@ router.patch("/update", async (req, res) => {
     res.status(200).send(returnEntry);
 })
 
+//delete entry by ID
+router.delete("/delete", async (req, res) => {
+    const entry = await dml.deleteEntry(req.body.id);
+    if (entry == -1) {
+        res.status(404).send("Error 404: Entry not found");
+        return;
+    }
+    res.status(200).send("Deleted entry"); //TODO: this doesn't verify the deletion
+    console.log("Deleted entry");
+})
+
 //first validate, then check if id exists, otherwise return 400
 
 //exports the routes for use elsewhere

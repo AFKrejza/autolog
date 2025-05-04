@@ -40,7 +40,6 @@ async function createVehicle (data) {
     //let now = dateNow();
     //console.log(now);
     await writeVehicles(allVehicles);
-    return data; //the created vehicle and all its additional properties
 }
 
 //read ALL vehicles
@@ -242,6 +241,19 @@ async function updateEntry (updated) {
     console.log("Updated entry");
 }
 
+//delete entry by ID
+async function deleteEntry (ID) {
+    const allEntries = await readEntries();
+
+    //find index of ID, return entry at index
+    const entryIndex = allEntries.findIndex(entry => entry.id === ID);
+    if (entryIndex == -1) return -1;
+    allEntries.splice(entryIndex, 1); //1 specifies to only delete one entry.
+    await writeEntries(allEntries);
+    await sortEntries();
+    //works, but is inefficient as it deletes, writes, reads, sorts, writes instead of deletes, sorts, writes
+}
+
 
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
@@ -250,7 +262,7 @@ module.exports.readVehicle = readVehicle;
 module.exports.updateVehicle = updateVehicle;
 
 module.exports.createEntry = createEntry;
-//module.exports.deleteEntry = deleteEntry;
+module.exports.deleteEntry = deleteEntry;
 module.exports.readEntries = readEntries;
 module.exports.readEntry = readEntry;
 module.exports.updateEntry = updateEntry;

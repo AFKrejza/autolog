@@ -33,11 +33,11 @@ router.post("/create", async (req, res) => {
             //compare validatedBody to req.body using JSON.stringify()
             //this assumes the keys are in the same order (which they should be)
             if (JSON.stringify(validatedBody) != JSON.stringify(req.body)) { //if additional properties were added or removed
-                const vehicle = await dml.createVehicle(validatedBody);
+                await dml.createVehicle(validatedBody);
                 res.status(203).send(validatedBody); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (show message and display vehicle where needed?).
             }
             else { //if nothing was changed
-                const vehicle = await dml.createVehicle(validatedBody);
+                await dml.createVehicle(validatedBody);
                 res.status(201).send(validatedBody);
             }
             
