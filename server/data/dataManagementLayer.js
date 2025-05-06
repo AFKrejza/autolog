@@ -259,16 +259,13 @@ async function deleteEntry (ID) {
 async function readVehicleEntries (ID) {
     const list = await readEntries();
     const vehicleEntries = [];
-    if (list == 0) return -1;
+    if (list == 0) return vehicleEntries;
     for (let i = 0, j = list.length; i < j; i++) {
         if (list[i].vehicleId == ID) {
             vehicleEntries.push(list[i]);
         }
     }
-    if (vehicleEntries.length > 0) {
-        return vehicleEntries;
-    }
-    else return -2;
+        return vehicleEntries; //return empty array if no entries found
 }
 //TODO: figure out how to only send X entries at a time (to display ONLY e.g. 10, 20, 50, 100 entries), use new function since this sends ALL
 //or rewrite it to take an argument
