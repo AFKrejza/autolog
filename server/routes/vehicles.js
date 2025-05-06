@@ -112,6 +112,41 @@ router.patch("/update", async (req, res) => {
     res.status(200).send(returnVehicle);
 })
 
+//get combined entries of selected Vehicles
+router.get("/mult", async (req, res) => {
+    //turn into array & validate & convert to int
+    const vehicles = Object.values(req.body);
+    const vehiclesLen = vehicles.length;
+    if (vehicles.length <= 0) {
+        res.status(400).send({ error: "400: No vehicles requested" });
+        return;
+    }
+    for (let i = 0, j = vehiclesLen; i < j; i++) {
+        let vId = parseInt(vehicles[i], 10);
+        if (vId <= 0 || isNaN(vId)) {
+            res.status(400).send({ error: "Error 400: Invalid vehicle ID: must be an integer > 0"})
+            return;
+        }
+        vehicles[i] = vId; //replace
+    }
+    try {
+        //verify that each vehicle exists
+        for (let i = 0, j = vehiclesLen; i < j; i++) {
+            const verify = await dml.vehicleCheck(vehicles[i]); //quite inefficient, new function using a Set object checking each vehicle only once would be faster
+            if (verify == -1) {
+                res.status(404).send("Error 404: Vehicle not found");
+                return;
+            }
+        }
+        const entries = await dml.readMultVehicleEntries(vehicles);
+        res.status(200).send(entries);
+    }
+    catch (error) {
+        res.status(400).send({ error });
+    }
+    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
+})
+
 //get vehicle by ID
 // added async before (req,res) to use await inside the function
 router.get("/:id", async (req, res) => {

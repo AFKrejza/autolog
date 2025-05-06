@@ -292,6 +292,23 @@ async function deleteVehicleEntries (ID) {
     else return -2;
 }
 
+//takes an array with the vehicle IDs
+//consider using Set object for O(1) lookup instead of O(n) for sets
+async function readMultVehicleEntries (vehicles) {
+    //add to Set (also handles duplicate vehicle IDs)
+    const vIds = new Set(vehicles);
+    const list = await readEntries();
+    const vehicleEntries = [];
+    if (list == 0) return vehicleEntries;
+
+    for (let i = 0, j = list.length; i < j; i++) {
+        if (vIds.has(list[i].vehicleId)) { //should be much faster than array iteration
+            vehicleEntries.push(list[i]);
+        }
+    }
+    return vehicleEntries; //regardless of if it's empty
+}
+
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
 module.exports.readVehicles = readVehicles;
@@ -300,6 +317,7 @@ module.exports.updateVehicle = updateVehicle;
 module.exports.readVehicleEntries = readVehicleEntries;
 module.exports.deleteVehicleEntries = deleteVehicleEntries;
 module.exports.vehicleCheck = vehicleCheck;
+module.exports.readMultVehicleEntries = readMultVehicleEntries
 
 module.exports.createEntry = createEntry;
 module.exports.deleteEntry = deleteEntry;
