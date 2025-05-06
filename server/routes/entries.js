@@ -15,8 +15,9 @@ const entries = path.join(dataPath, "entries.json");
 //full route: http://localhost:3000/entries/create
 router.post("/create", async (req, res) => {
     
-    //TODO: add a log later
-    const valid = ajv.validate(newEntrySchema, req.body);
+    const validatedBody = structuredClone(req.body);
+    const valid = ajv.validate(newEntrySchema, validatedBody);
+
     if (valid) {
         try {
             //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
@@ -25,17 +26,12 @@ router.post("/create", async (req, res) => {
                 res.status(404).send("Error: Vehicle not found");
                 return;
             }
-            if (entry == -2) {
-                res.status(500).send("Error 500: Database empty or inaccessible");
-                return;
-            }
-
-            if (entry != req.body) { //TODO: if they don't match: needs to display mismatch and what was removed (if anything!)
-                res.status(203).send(req.body); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (add message and display entry where needed?).
+            if (JSON.stringify(validatedBody) != JSON.stringify(req.body)) { //TODO: if they don't match: needs to display mismatch and what was removed (if anything!)
+                res.status(203).send(validatedBody); //TODO: this should display a warning to the user. Figure out how this'll work on the frontend (add message and display entry where needed?).
                 return;
             }
             else {
-                res.status(201).send(req.body);
+                res.status(201).send(validatedBody);
                 console.log("Entry created");
                 return;
             }
@@ -50,7 +46,6 @@ router.post("/create", async (req, res) => {
         res.status(400).send("Error: " + ajv.errors.map(err => {
             const field = err.instancePath.replace("/", "") || "(root)"; //remove first / to get property path
             return `${field} ${err.message}`;
-            //only displays one error at a time
         }));
         console.log("Error in entry creation");
     }
@@ -112,7 +107,11 @@ router.patch("/update", async (req, res) => {
 
 //delete entry by ID
 router.delete("/delete", async (req, res) => {
-    const entry = await dml.deleteEntry(req.body.id);
+    const id = parseInt(req.body.id, 10);
+    if (!Number.isInteger(id) || id <= 0) {
+        return res.status(400).send({ error: "Invalid ID: Must be positive integer" });
+    }
+    const entry = await dml.deleteEntry(id);
     if (entry == -1) {
         res.status(404).send("Error 404: Entry not found");
         return;

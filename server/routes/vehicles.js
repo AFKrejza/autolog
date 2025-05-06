@@ -78,7 +78,7 @@ router.delete("/delete", async (req, res) => {
         return res.status(400).send({ error: "Invalid ID: Must be positive integer" });
     }
 
-    const vehicle = await dml.deleteVehicle(req.body.id);
+    const vehicle = await dml.deleteVehicle(id);
     if (vehicle == -1 || vehicle < 0) {
         res.status(404).send("Error 404: Vehicle not found");
         return;
