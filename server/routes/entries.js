@@ -59,6 +59,10 @@ router.post("/create", async (req, res) => {
 //lists ALL entries
 router.get("/list", async (req, res) => {
     const list = await dml.readEntries();
+    if (list == 0) {
+        res.status(200).send([]);
+        return;
+    }
     res.status(200).send(list);
 })
 
