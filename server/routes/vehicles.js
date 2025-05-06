@@ -62,6 +62,10 @@ router.post("/create", async (req, res) => {
 //list all vehicles
 router.get("/list", async (req, res) => {
     const list = await dml.readVehicles();
+    if (list == 0) {
+        res.status(200).send([]); //kinda weird, but other code relies on readVehicles returning 0. Consider refactoring.
+        return;
+    }
     res.status(200).send(list);
 })
 
