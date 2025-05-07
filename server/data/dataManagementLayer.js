@@ -315,7 +315,7 @@ async function totalSpending(ID) {
     for (let i = 0, j = list.length; i < j; i++) {
         total += list[i].cost;
     }
-    return total; //TODO: as plaintext or as object?
+    return total; //returns as plaintext. TODO: should it be an object?
 }
 
 //TODO: this should just be export default
