@@ -306,6 +306,19 @@ async function readMultVehicleEntries (vehicles) {
     return vehicleEntries; //regardless of if it's empty
 }
 
+//view total spending by vehicle
+//takes ONE int as input
+async function totalSpending(ID) {
+    const list = await readVehicleEntries(ID);
+    let total = 0;
+    if (list == 0) return 0;
+    for (let i = 0, j = list.length; i < j; i++) {
+        total += list[i].cost;
+    }
+    return total; //TODO: as plaintext or as object?
+}
+
+//TODO: this should just be export default
 module.exports.createVehicle = createVehicle;
 module.exports.deleteVehicle = deleteVehicle;
 module.exports.readVehicles = readVehicles;
@@ -314,7 +327,8 @@ module.exports.updateVehicle = updateVehicle;
 module.exports.readVehicleEntries = readVehicleEntries;
 module.exports.deleteVehicleEntries = deleteVehicleEntries;
 module.exports.vehicleCheck = vehicleCheck;
-module.exports.readMultVehicleEntries = readMultVehicleEntries
+module.exports.readMultVehicleEntries = readMultVehicleEntries;
+module.exports.totalSpending = totalSpending;
 
 module.exports.createEntry = createEntry;
 module.exports.deleteEntry = deleteEntry;

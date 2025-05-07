@@ -197,5 +197,28 @@ router.get("/:id/entries", async (req, res) => {
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
 
+//get total vehicle spending for ONE vehicle by ID
+//just adds .cost of all entries
+router.get("/:id/entries/stats", async (req, res) => {
+    let vId = parseInt(req.params.id, 10);
+    if (vId <= 0 || isNaN(vId)) {
+        res.status(400).send({ error: "Error 400: Invalid vehicle ID: must be an integer > 0" })
+        return;
+    }
+    try {
+        const getVehicle = await dml.vehicleCheck(vId);
+        if (getVehicle == -1) {
+            res.status(404).send({ error: "Error 404: Vehicle not found" });
+            return;
+        }
+        const totalSpending = await dml.totalSpending(vId);
+        res.status(200).send(totalSpending);
+    }
+    catch (error) {
+        res.status(400).send("Error: " + error);
+    }
+    //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
+})
+
 //exports the routes
 module.exports = router;
