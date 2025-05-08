@@ -3,7 +3,7 @@ const express = require("express");
 //initialization of a new Express.js server
 const app = express();
 //specification of the port on which the application should run on localhost 
-const port = 3000;
+const port = 5000;
 
 //convert json data into js object
 app.use(express.json());
