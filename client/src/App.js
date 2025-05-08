@@ -1,77 +1,42 @@
 import './App.css';
+import { useState, useEffect } from 'react';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
         <h1>Autolog</h1>
+        <ListVehicles />
         <p>
           <MyButton />
-          <ListVehicles />
         </p>
-
       </header>
-      <aside></aside>
     </div>
   );
 }
 
-function MyButton() {
+export function MyButton() {
   return (
     <button> I'm a button</button>
   )
 }
 
-const vehicles = [
-  {
-    make: "Skoda",
-    model: "Fabia",
-    year: "2020"
-  },
-  {
-    make: "Skoda",
-    model: "Fabia",
-    year: "2020"
-  }
-]
-
-export function ListVehicles() {
-  const ListVehicles = vehicles.map(vehicle =>
-    <li>{vehicle.make} {vehicle.model} {vehicle.year}</li>);
-    return <ul>{ListVehicles}</ul>;
-}
-
 //get vehicle list
-//use fetch
-async function GetVehicles() {
-  const url = "localhost:3000/vehicles/list";
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-    const json = await response.json();
-    console.log("List vehicles");
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
+export function ListVehicles() {
+  const [vehicles, setVehicles] = useState([]); //take vehicle object
+  const url = "http://localhost:5000/vehicles/list";
 
-async function TEST() {
-  const url = "localhost:3000/test";
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
+  useEffect( () => {
+    async function getList() {
+      const response = await fetch(url);
+      const json = await response.json();
+      setVehicles(json);
     }
-    const json = await response.json();
-    console.log("List vehicles");
-    return json;
-  }
-  catch (error) {
-    console.error(error.message);
-  }
+    getList();
+  }, []);
+
+  const list = vehicles ? vehicles.map(vehicle => <li>{vehicle.make} {vehicle.model} {vehicle.year}</li>) : <li>Loading...</li>;
+  return <ul>{list}</ul>;
 }
 
 export default App;
