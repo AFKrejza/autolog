@@ -4,6 +4,9 @@ const express = require("express");
 const app = express();
 //specification of the port on which the application should run on localhost 
 const port = 5000;
+// let backend and frontend communicate while on different ports
+const cors = require('cors');
+app.use(cors());
 
 //convert json data into js object
 app.use(express.json());

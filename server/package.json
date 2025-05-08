@@ -11,9 +11,14 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "^8.17.1",
+    "cors": "^2.8.5",
     "express": "^5.1.0"
   },
   "nodemonConfig": {
-      "ignore": ["/data/vehicles.json", "/data/entries.json", "node_modules"]
+    "ignore": [
+      "/data/vehicles.json",
+      "/data/entries.json",
+      "node_modules"
+    ]
   }
 }
