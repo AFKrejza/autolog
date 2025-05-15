@@ -23,7 +23,7 @@
 }
 
 .App-list {
-  width: 250px;
+  width: 10vw;
   height: 100vh;
   display: flex;
   align-items: flex-start;
