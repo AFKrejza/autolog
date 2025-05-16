@@ -1,6 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Table from 'react-bootstrap/Table';
 
 //TODO: see if I should use path module
 
@@ -90,16 +91,38 @@ export function VehicleEntries({ id }) {
     getEntries();
   }, [id]);
   return (
-    <ListGroup>
+    <Table striped bordered hover>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Cost</th>
+          <th>Mileage</th>
+          <th>Mechanic</th>
+          <th>Category</th>
+          <th>Notes</th>
+          <th>Created at</th>
+          <th>Updated at</th>
+          <th>ID</th>
+        </tr>
+      </thead>
+      <tbody>
       {entries.map(entry => 
-      <ListGroup.Item
-        key={entry.id}
-        action
-      >
-        <div>{entry.date} {entry.description} {entry.cost} {entry.mileage} {entry.mechanic} {entry.category} {entry.notes} {entry.createdAt} {entry.updatedAt}</div>
-      </ListGroup.Item>
+        <tr key={entry.id}>
+        <td>{entry.date}</td>
+        <td>{entry.description}</td>
+        <td>{entry.cost}</td>
+        <td>{entry.mileage}</td>
+        <td>{entry.mechanic}</td>
+        <td>{entry.category}</td>
+        <td>{entry.notes}</td>
+        <td>{entry.createdAt}</td>
+        <td>{entry.updatedAt}</td>
+        <td>{entry.id}</td>
+        </tr>
       )}
-    </ListGroup>
+      </tbody>
+    </Table>
   )
 }
 
