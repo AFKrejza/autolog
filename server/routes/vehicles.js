@@ -44,17 +44,17 @@ router.post("/create", async (req, res) => {
             console.log("Vehicle created");
         }
         catch (error) {
-            res.status(400).send("Error in vehicle creation: " + error);
+            res.status(400).send({ error: "Error in vehicle creation: " + error });
             console.log("Error in vehicle creation");
         }
         
     }
     else {
-        res.status(400).send("Error: " + ajv.errors.map(err => {
+        res.status(400).send({ error: "Error: " + ajv.errors.map(err => {
             const field = err.instancePath.replace("/", "") || "(root)"; //remove first / to get property path
             return `${field} ${err.message}`;
             //TODO: I think it only displays one error at a time. Probably not an issue?
-        }));
+        }) });
         console.log("Error in vehicle creation");
     }
 })
@@ -80,7 +80,7 @@ router.delete("/delete", async (req, res) => {
 
     const vehicle = await dml.deleteVehicle(id);
     if (vehicle == -1 || vehicle < 0) {
-        res.status(404).send("Error 404: Vehicle not found");
+        res.status(404).send({ error: "Error 404: Vehicle not found" });
         return;
     }
     res.status(200).send("Deleted vehicle"); //TODO: this doesn't verify the deletion. Does it need to?
@@ -98,16 +98,16 @@ router.patch("/update", async (req, res) => {
             await dml.updateVehicle(req.body);
         }
         catch (error) {
-            res.status(400).send("Error in vehicle updating: " + error);
-            console.log("Error in vehicle updating: " + error);
+            res.status(400).send({ error: "Error in vehicle updating: " + error });
+            console.log({ error: "Error in vehicle updating: " + error });
             return;
         }
     }
     else if (!valid) {
-        res.status(400).send("Error: " + ajv.errors.map(err => {
+        res.status(400).send({error: "Error: " + ajv.errors.map(err => {
             const field = err.instancePath.replace("/", "") || "(root)";
             return `${field} ${err.message}`;
-        }));
+        }) });
         console.log("Error in vehicle updating");
         return;
     }
@@ -138,7 +138,7 @@ router.get("/mult", async (req, res) => {
         for (let i = 0, j = vehiclesLen; i < j; i++) {
             const verify = await dml.vehicleCheck(vehicles[i]); //quite inefficient, new function using a Set object checking each vehicle only once would be faster
             if (verify == -1) {
-                res.status(404).send("Error 404: Vehicle not found");
+                res.status(404).send({ error: "Error 404: Vehicle not found" });
                 return;
             }
         }
@@ -158,7 +158,7 @@ router.get("/:id", async (req, res) => {
     try {
         const getVehicle = await dml.readVehicle(req.params.id);
         if (getVehicle == -1) {
-            res.status(404).send("Error 404: Vehicle not found");
+            res.status(404).send({ error: "Error 404: Vehicle not found" });
             return;
         }
         else {
@@ -167,7 +167,7 @@ router.get("/:id", async (req, res) => {
         }
     }
     catch (error) {
-        res.status(400).send("Error: " + error);
+        res.status(400).send({ error: "Error: " + error });
     }
     //console.log(getVehicle);
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
@@ -183,7 +183,7 @@ router.get("/:id/entries", async (req, res) => {
     try {
         const getVehicle = await dml.vehicleCheck(vId);
         if (getVehicle == -1) {
-            res.status(404).send("Error 404: Vehicle not found");
+            res.status(404).send({ error: "Error 404: Vehicle not found" });
             return;
         }
         else {
@@ -192,7 +192,7 @@ router.get("/:id/entries", async (req, res) => {
         }
     }
     catch (error) {
-        res.status(400).send("Error: " + error);
+        res.status(400).send({ error: "Error: " + error });
     }
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
@@ -215,7 +215,7 @@ router.get("/:id/entries/stats", async (req, res) => {
         res.status(200).send(totalSpending);
     }
     catch (error) {
-        res.status(400).send("Error: " + error);
+        res.status(400).send({ error: "Error: " + error });
     }
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
