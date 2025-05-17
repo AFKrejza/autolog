@@ -14,7 +14,8 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function App() {
   const [activeVehicle, setActiveVehicle] = useState();
-  const [notification, setNotification] = useState({ show: false, msg: "" })
+  const [notification, setNotification] = useState({ show: false, msg: "" });
+  const [vehicles, setVehicles] = useState([]);
 
   return (
     <div className="App">
@@ -25,7 +26,10 @@ function App() {
         <div className="App-list">
           <h1>Vehicles</h1>
           
-          <ListVehicles setActiveVehicle = {setActiveVehicle} />
+          <ListVehicles
+          setActiveVehicle={setActiveVehicle}
+          vehicles={vehicles}
+          setVehicles={setVehicles} />
         </div>
         <div className="content">
           <Notification
@@ -35,6 +39,8 @@ function App() {
           />
           <NewVehicleForm
           setActiveVehicle = {setActiveVehicle}
+          vehicles={vehicles}
+          setVehicles={setVehicles}
           setNotification={setNotification}
           />
           {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
@@ -48,8 +54,7 @@ function App() {
 }
 
 //get vehicle list
-export function ListVehicles({ setActiveVehicle }) {
-  const [vehicles, setVehicles] = useState([]);
+export function ListVehicles({ setActiveVehicle, vehicles, setVehicles }) {
   const url = `${SERVER_URL}/vehicles/list`;
 
   useEffect( () => {
@@ -139,7 +144,7 @@ export function VehicleEntries({ id }) {
 }
 
 //create new vehicle component
-export function NewVehicleForm({ setActiveVehicle, setNotification }) {
+export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, setVehicles }) {
   const [showVehicleForm, setshowVehicleForm] = useState(false); //show or hide, default hide
   const url = `${SERVER_URL}/vehicles/create`;
 
@@ -214,7 +219,7 @@ export function NewVehicleForm({ setActiveVehicle, setNotification }) {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => setshowVehicleForm(false)} variant="secondary">Cancel</Button>
-            <Button onClick={async () => await handleCreateVehicle(formData, setActiveVehicle, setNotification)}
+            <Button onClick={async () => await handleCreateVehicle(formData, setActiveVehicle, setNotification, setVehicles)}
             variant="primary" type="submit">
               Submit
             </Button>
@@ -229,7 +234,7 @@ export function NewVehicleForm({ setActiveVehicle, setNotification }) {
 //call api
 //TODO: add error management
 //TODO: update vehicle list
-export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification) {
+export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles) {
   const url = `${SERVER_URL}/vehicles/create`;
   let { make, model, year } = vehicle; //destructure
   year = parseInt(year, 10);
@@ -248,7 +253,6 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     return;
   }
 
-  //console.log("TEST" + typeof year);
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -267,7 +271,8 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     setNotification({ show: true, msg: "Vehicle created" });
     console.log(json);
     //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
-    setActiveVehicle(vehicle);
+    //setActiveVehicle(vehicle); it should be json
+    setVehicles(prevVehicles => [...prevVehicles, json]);
 
     //TODO: show toast notification with autohide
 
