@@ -21,7 +21,7 @@ router.post("/create", async (req, res) => {
     if (valid) {
         try {
             //TODO: add proper codes, e.g. missing year: correct code plus message and return the body
-            const entry = await dml.createEntry(req.body);
+            const entry = await dml.createEntry(validatedBody);
             if (entry == -1) {
                 res.status(404).send("Error: Vehicle not found");
                 return;

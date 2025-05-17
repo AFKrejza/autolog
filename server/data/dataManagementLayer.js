@@ -210,7 +210,7 @@ async function createEntry (entry) {
     //const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === entry.vehicleId);
     allVehicles[vehicleIndex].updatedAt = dateNow(); //TODO: fix bug here
     await writeVehicles(allVehicles);
-    return vehicleIndex;
+    return entry;
 }
 
 //update entry, sends the updated vehicle with all the info
