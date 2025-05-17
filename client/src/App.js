@@ -16,6 +16,7 @@ function App() {
   const [activeVehicle, setActiveVehicle] = useState();
   const [notification, setNotification] = useState({ show: false, msg: "" });
   const [vehicles, setVehicles] = useState([]);
+  const [entries, setEntries] = useState([]);
 
   return (
     <div className="App">
@@ -56,11 +57,20 @@ function App() {
             setVehicles={setVehicles}
             setActiveVehicle={setActiveVehicle}
           />}
+          {activeVehicle && <NewEntryForm
+          id={activeVehicle.id}
+          setNotification={setNotification}
+          setEntries={setEntries}
+          />}
           <div className="vehicle-info">
             {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
           </div>
           <div className="entries">
-          {activeVehicle && <VehicleEntries id={activeVehicle.id} />}
+          {activeVehicle && <VehicleEntries
+          id={activeVehicle.id}
+          entries={entries}
+          setEntries={setEntries}
+          />}
           </div>
         </div>
       </div>
@@ -108,8 +118,7 @@ export function ViewVehicle({ vehicle }) { //destructuring it
 
 }
 
-export function VehicleEntries({ id }) {
-  const [entries, setEntries] = useState([]);
+export function VehicleEntries({ id, entries, setEntries }) {
   //console.log(id);
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
@@ -253,7 +262,10 @@ export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, se
 //TODO: update vehicle list
 export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm) {
   const url = `${SERVER_URL}/vehicles/create`;
-  let { make, model, year } = vehicle; //destructure
+  let make = vehicle.make;
+  let model = vehicle.model;
+  let year = vehicle.year;
+  let id = vehicle.id;
   year = parseInt(year, 10);
   //validate data
   //TODO: Add an alert here for each one
@@ -449,7 +461,7 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
       })
     });
     const updated = await response.json();
-    //setActiveVehicle(json); //not needed
+    setActiveVehicle(updated); //not needed
     setNotification({ show: true, msg: "Vehicle updated" });
     console.log(updated);
     //Updating the list: I could replace the vehicle, or i could get the list again. Replace it
@@ -520,6 +532,220 @@ export function Notification({ show, msg, onClose }) {
       </Col>
     </Row>
   );
+}
+
+//TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
+//create new entry - takes vehicle ID
+export function NewEntryForm({ id, setNotification, setEntries }) {
+  const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
+
+  //initialize the keys & empty values
+  const [formData, setFormData] = useState({
+    date: "",
+    description: "",
+    cost: "",
+    mileage: "",
+    mechanic: "",
+    category: "",
+    notes: "",
+  });
+
+  //handle form change & update formData
+  function handleChange(input) {
+    setFormData({
+      ...formData,
+      [input.target.name]: input.target.value
+    })
+  }
+
+  return (
+    <>
+    <Button onClick={() => setShowEntryForm(true)} variant="primary">New Entry</Button>
+    {showEntryForm && (
+      <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal.Dialog>
+          <Modal.Header closeButton onClick={() => setShowEntryForm(false)}>
+            <Modal.Title>New Entry</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="formDate">
+                <Form.Label>Date</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Date in YYYY-MM-DD format" //TODO: make this more user friendly!
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formDescription">
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                  />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formCost">
+                <Form.Label>Cost</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Cost"
+                  name="cost"
+                  value={formData.cost}
+                  onChange={handleChange}
+                  type="number"
+                  min={0}
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formMileage">
+                <Form.Label>Mileage</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Mileage"
+                  name="mileage"
+                  value={formData.mileage}
+                  onChange={handleChange}
+                  type="number"
+                  min={0}
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formMechanic">
+                <Form.Label>Mechanic</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Mechanic"
+                  name="mechanic"
+                  value={formData.mechanic}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formCategory">
+                <Form.Label>Category</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formNotes">
+                <Form.Label>Notes</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Notes"
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => setShowEntryForm(false)} variant="secondary">Cancel</Button>
+            <Button onClick={async () => await handleCreateEntry(id, formData, setNotification, setEntries, setShowEntryForm)}
+            variant="primary" type="submit">
+              Submit
+            </Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </div>
+    )}
+    </>
+  )
+}
+
+//TODO: update entry list
+export async function handleCreateEntry(id, formData, setNotification, setEntries, setShowEntryForm) {
+  console.log(id);
+  const url = `${SERVER_URL}/entries/create`;
+  let vehicleId = parseInt(id, 10);
+  let date = formData.date;
+  let description = formData.description;
+  let cost = parseInt(formData.cost, 10);
+  let mileage = parseInt(formData.mileage, 10);
+  let mechanic = formData.mechanic;
+  let category = formData.category;
+  let notes = formData.notes;
+  console.log(vehicleId);
+  
+  //validate data
+  //TODO: Add an alert here for each one
+  if (date.length < 1) {
+    setNotification({ show: true, msg: "Invalid date" });
+    return;
+  }
+  else if (description.length < 1) {
+    setNotification({ show: true, msg: "Invalid description" });
+    return;
+  } 
+  else if (cost <= 0 || !Number.isInteger(cost)) {
+    setNotification({ show: true, msg: "Invalid cost: must be integer" });
+    return;
+  }
+  else if (cost <= 0 || !Number.isInteger(cost)) {
+    setNotification({ show: true, msg: "Invalid cost: must be integer" });
+    return;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }, //saying sending JSON
+      body: JSON.stringify({
+        vehicleId: vehicleId,
+        date: date,
+        description: description,
+        cost: cost,
+        mileage: mileage,
+        mechanic: mechanic,
+        category: category,
+        notes: notes,
+      })
+    });
+    if (!response.ok) {
+      const errorMsg = await response.text();
+      setNotification({show: true, msg: `Error: ${errorMsg}`});
+      console.error(`${errorMsg}, HTTP error:`, response.status);
+    }
+    const json = await response.json();
+    //setActiveVehicle(json);
+    setNotification({ show: true, msg: "Entry created" });
+    console.log(json);
+    //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
+    //setActiveVehicle(vehicle); it should be json
+    //setVehicles(prevVehicles => [...prevVehicles, json]);
+    setEntries(prevEntries => [...prevEntries, json]);
+    setShowEntryForm(false);
+
+  }
+  catch (error) {
+    console.error(error);
+    setNotification({ show: true, msg: "Error creating entry" });    
+    //TODO: show toast error notification with autohide
+  }
 }
 
 export default App;
