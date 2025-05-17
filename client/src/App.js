@@ -50,6 +50,12 @@ function App() {
             setNotification={setNotification}
             activeVehicle={activeVehicle}
           />}
+          {activeVehicle && <DeleteVehicle
+            setNotification={setNotification}
+            id={activeVehicle.id}
+            setVehicles={setVehicles}
+            setActiveVehicle={setActiveVehicle}
+          />}
           <div className="vehicle-info">
             {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
           </div>
@@ -460,7 +466,41 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
   }
 }
 
+//delete vehicle component
+//TODO: add 'are you sure?'
+export function DeleteVehicle({ id, setNotification, setVehicles, setActiveVehicle }) {
+  return (
+    <Button onClick={async () => await handleDeleteVehicle(id, setNotification, setVehicles, setActiveVehicle)} variant="primary">Delete Vehicle</Button>
+  )
+}
 
+//only takes the id of vehicle to be deleted
+export async function handleDeleteVehicle(id, setNotification, setVehicles, setActiveVehicle) {
+  const url = `${SERVER_URL}/vehicles/delete`;
+
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify({
+        id: id
+      })
+    })
+    console.log(response);
+    setVehicles(prevVehicles =>
+      prevVehicles.filter(v => v.id !== id)
+    );
+    setActiveVehicle();
+    setNotification({ show: true, msg: `Vehicle ${id} deleted`});
+  }
+  catch (error) {
+    console.error(error);
+    setNotification({ show: true, msg: "Error deleting vehicle" });
+  }
+}
 
 //notification component
 export function Notification({ show, msg, onClose }) {
