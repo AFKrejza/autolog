@@ -181,6 +181,17 @@ export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, se
     year: ""
   });
 
+  useEffect(() => {
+    if (showVehicleForm) {
+      setFormData({
+        make: "",
+        model: "",
+        year: "",
+        id: ""
+      });
+    }
+  }, [showVehicleForm]);
+
   //handle form change & update formData
   function handleChange(input) {
     setFormData({
@@ -538,6 +549,21 @@ export function Notification({ show, msg, onClose }) {
 //create new entry - takes vehicle ID
 export function NewEntryForm({ id, setNotification, setEntries }) {
   const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
+
+  //wipes form
+  useEffect(() => {
+    if (showEntryForm) {
+      setFormData({
+        date: "",
+        description: "",
+        cost: "",
+        mileage: "",
+        mechanic: "",
+        category: "",
+        notes: "",
+      });
+    }
+  }, [showEntryForm]);
 
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
