@@ -35,10 +35,16 @@
   flex: 1;
 }
 
-.content.entries {
+.content .entries {
   display: flex;
   align-items: center;
 
+}
+
+.main .content .vehicle-info{
+  display: flex;
+  align-items: flex-start;
+  font-size: calc(5px + 4vmin);
 }
 
 .main {

@@ -43,7 +43,16 @@ function App() {
           setVehicles={setVehicles}
           setNotification={setNotification}
           />
-          {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
+          {activeVehicle && <UpdateVehicleForm
+            setActiveVehicle = {setActiveVehicle}
+            vehicles={vehicles}
+            setVehicles={setVehicles}
+            setNotification={setNotification}
+            activeVehicle={activeVehicle}
+          />}
+          <div className="vehicle-info">
+            {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
+          </div>
           <div className="entries">
           {activeVehicle && <VehicleEntries id={activeVehicle.id} />}
           </div>
@@ -57,6 +66,7 @@ function App() {
 export function ListVehicles({ setActiveVehicle, vehicles, setVehicles }) {
   const url = `${SERVER_URL}/vehicles/list`;
 
+  //TODO: make this a helper function and use it elsewhere, like in handleUpdateVehicle
   useEffect( () => {
     async function getList() {
       const response = await fetch(url);
@@ -144,9 +154,10 @@ export function VehicleEntries({ id }) {
 }
 
 //create new vehicle component
+//TODO: make a VehicleForm component and use it in create and update vehicle
 export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, setVehicles }) {
   const [showVehicleForm, setshowVehicleForm] = useState(false); //show or hide, default hide
-  const url = `${SERVER_URL}/vehicles/create`;
+  //const url = `${SERVER_URL}/vehicles/create`;
 
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
@@ -219,7 +230,7 @@ export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, se
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => setshowVehicleForm(false)} variant="secondary">Cancel</Button>
-            <Button onClick={async () => await handleCreateVehicle(formData, setActiveVehicle, setNotification, setVehicles)}
+            <Button onClick={async () => await handleCreateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm)}
             variant="primary" type="submit">
               Submit
             </Button>
@@ -234,7 +245,7 @@ export function NewVehicleForm({ setActiveVehicle, setNotification, vehicles, se
 //call api
 //TODO: add error management
 //TODO: update vehicle list
-export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles) {
+export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm) {
   const url = `${SERVER_URL}/vehicles/create`;
   let { make, model, year } = vehicle; //destructure
   year = parseInt(year, 10);
@@ -273,8 +284,7 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
     //setActiveVehicle(vehicle); it should be json
     setVehicles(prevVehicles => [...prevVehicles, json]);
-
-    //TODO: show toast notification with autohide
+    setshowVehicleForm(false);
 
   }
   catch (error) {
@@ -283,6 +293,174 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     //TODO: show toast error notification with autohide
   }
 }
+
+
+
+//update vehicle component
+//TODO: make a VehicleForm component and use it in create and update vehicle
+export function UpdateVehicleForm({ setActiveVehicle, setNotification, vehicles, setVehicles, activeVehicle }) {
+  const [showVehicleForm, setshowVehicleForm] = useState(false); //show or hide, default hide
+  //const url = `${SERVER_URL}/vehicles/update`;
+
+  //initialize the keys & empty values
+  const [formData, setFormData] = useState({
+    make: activeVehicle.make,
+    model: activeVehicle.model,
+    year: activeVehicle.year,
+    id: activeVehicle.id
+  });
+
+  useEffect(() => {
+    if (activeVehicle) {
+      setFormData({
+        make: activeVehicle.make,
+        model: activeVehicle.model,
+        year: activeVehicle.year,
+        id: activeVehicle.id
+      });
+    }
+  }, [activeVehicle, showVehicleForm]);
+
+  //handle form change & update formData
+  function handleChange(input) {
+    setFormData({
+      ...formData,
+      [input.target.name]: input.target.value
+    })
+    //console.log(input.target.value);
+  }
+
+  return (
+    <>
+    <Button onClick={() => setshowVehicleForm(true)} variant="primary">Update Vehicle</Button>
+    {showVehicleForm && (
+      <div
+        className="modal show"
+        style={{ display: 'block', position: 'initial' }}
+      >
+        <Modal.Dialog>
+          <Modal.Header closeButton onClick={() => setshowVehicleForm(false)}>
+            <Modal.Title>Update Vehicle</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group className="mb-3" controlId="formMake">
+                <Form.Label>Make</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Vehicle make"
+                  name="make"
+                  value={formData.make}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formModel">
+                <Form.Label>Model</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Vehicle model"
+                  name="model"
+                  value={formData.model}
+                  onChange={handleChange}
+                  type="text"
+                  minLength={1}
+                  />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formYear">
+                <Form.Label>Year</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Vehicle year"
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  type="number"
+                  min={0}
+                  minLength={1}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => setshowVehicleForm(false)} variant="secondary">Cancel</Button>
+            <Button onClick={async () => await handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm)}
+            variant="primary" type="submit">
+              Submit
+            </Button>
+          </Modal.Footer>
+        </Modal.Dialog>
+      </div>
+    )}
+    </>
+  )
+}
+
+//call api
+//TODO: add error management
+//TODO: update vehicle list
+export async function handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm) {
+  const url = `${SERVER_URL}/vehicles/update`;
+  //dont destructure, order could change.
+  let make = formData.make;
+  let model = formData.model;
+  let year = formData.year;
+  let id = formData.id;
+  year = parseInt(year, 10);
+  id = parseInt(id, 10);
+  //validate data
+  //TODO: Add an alert here for each one
+  if (make.length < 1) {
+    setNotification({ show: true, msg: "Invalid make" });
+    return;
+  }
+  else if (model.length < 1) {
+    setNotification({ show: true, msg: "Invalid model" });
+    return;
+  } 
+  else if (year <= 0 || !Number.isInteger(year)) {
+    setNotification({ show: true, msg: "Invalid year: must be integer" });
+    return;
+  }
+  else if (id <= 0 || !Number.isInteger(id)) {
+    setNotification({ show: true, msg: "Invalid ID: must be integer & vehicle must exist"}); //this should never happen, but check it anyway. The backend also verifies the ID properly.
+  }
+  console.log(id);
+
+  try {
+    const response = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }, //saying sending JSON
+      body: JSON.stringify({
+        make: make,
+        model: model,
+        year: year,
+        id: id
+      })
+    });
+    const updated = await response.json();
+    //setActiveVehicle(json); //not needed
+    setNotification({ show: true, msg: "Vehicle updated" });
+    console.log(updated);
+    //Updating the list: I could replace the vehicle, or i could get the list again. Replace it
+    setVehicles(prevVehicles =>
+      prevVehicles.map(v => v.id === updated.id ? updated : v)
+    );
+
+    setshowVehicleForm(false);
+  }
+  catch (error) {
+    console.error(error);
+    setNotification({ show: true, msg: "Error updating vehicle" });    
+    //TODO: show toast error notification with autohide
+  }
+}
+
+
 
 //notification component
 export function Notification({ show, msg, onClose }) {
