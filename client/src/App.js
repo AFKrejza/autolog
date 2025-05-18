@@ -3,13 +3,13 @@ import { useState } from 'react';
 
 import { Notification } from './Components/Notification';
 import { ListVehicles } from './Vehicles/ListVehicles';
-import { ViewVehicle } from './Vehicles/ViewVehicle';
 import { VehicleEntries } from './Entries/VehicleEntries';
 import { NewVehicleForm } from './Vehicles/NewVehicleForm';
 import { UpdateVehicleForm } from './Vehicles/UpdateVehicleForm';
 import { DeleteVehicle } from './Vehicles/DeleteVehicle';
 import { NewEntryForm } from './Entries/NewEntryForm';
 import { UpdateEntryForm } from './Entries/UpdateEntryForm';
+import { VehicleInfoPanel } from './Vehicles/VehicleInfo/VehicleInfoPanel';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -41,13 +41,12 @@ function App() {
           msg={notification.msg}
           onClose={() => setNotification({ ...notification, show: false })}
           />
-          <NewVehicleForm
-          setActiveVehicle = {setActiveVehicle}
-          vehicles={vehicles}
-          setVehicles={setVehicles}
-          setNotification={setNotification}
-          />
-          {activeVehicle && <UpdateVehicleForm
+          
+          <div className="vehicle-info">
+            {activeVehicle && <VehicleInfoPanel vehicle={activeVehicle} />}
+          </div>
+          <div className="buttons">
+            {activeVehicle && <UpdateVehicleForm
             setActiveVehicle = {setActiveVehicle}
             vehicles={vehicles}
             setVehicles={setVehicles}
@@ -73,10 +72,15 @@ function App() {
             setShowEntryForm={setShowEntryForm}
             showEntryForm={showEntryForm}
           />}
-          <div className="vehicle-info">
-            {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
+          <NewVehicleForm
+          setActiveVehicle = {setActiveVehicle}
+          vehicles={vehicles}
+          setVehicles={setVehicles}
+          setNotification={setNotification}
+          />
           </div>
           <div className="entries">
+            
           {activeVehicle && <VehicleEntries
           id={activeVehicle.id}
           entries={entries}

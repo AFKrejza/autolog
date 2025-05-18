@@ -1,21 +1,20 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 1vh;
+  background-color: #0138a5;
+  min-height: 5%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(5px + 1vmin);
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 .App-link {
@@ -23,16 +22,18 @@
 }
 
 .App-list {
-  width: 10vw;
-  height: 100vh;
+  max-width: 300px;
+  /*height: 100vh;*/
   display: flex;
-  align-items: flex-start;
+  padding: 1rem;
+  align-items: center;
   flex-direction: column;
   overflow-y: auto;
 }
 
 .content {
-  flex: 1;
+  flex: 3;
+  /*display: flex;*/
 }
 
 .content .entries {
@@ -41,13 +42,23 @@
 
 }
 
-.main .content .vehicle-info{
+.main .content .vehicle-info {
   display: flex;
   align-items: flex-start;
+  font-size: 300%;
+  font-weight: bold;
+  /*
   font-size: calc(5px + 4vmin);
+  height: 20vh;
+  */
 }
 
 .main {
   display: flex;
-  height: 100vh;
+  width: 100%;
+}
+
+.main .content .buttons {
+  display: flex;
+  align-items: flex-start;
 }
