@@ -6,7 +6,6 @@ import { SERVER_URL } from '../App';
 export function ListVehicles({ setActiveVehicle, vehicles, setVehicles }) {
   const url = `${SERVER_URL}/vehicles/list`;
 
-  //TODO: make this a helper function and use it elsewhere, like in handleUpdateVehicle
   useEffect( () => {
     async function getList() {
       const response = await fetch(url);

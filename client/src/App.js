@@ -13,6 +13,7 @@ import { VehicleInfoPanel } from './Vehicles/VehicleInfo/VehicleInfoPanel';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
+//TODO: the UI is extremely buggy and doesn't work correctly
 function App() {
   const [activeVehicle, setActiveVehicle] = useState();
   const [notification, setNotification] = useState({ show: false, msg: "" });
@@ -28,8 +29,7 @@ function App() {
       </header>
       <div className="main">
         <div className="App-list">
-          <h1>Vehicles</h1>
-          
+          <h1>Vehicles</h1> 
           <ListVehicles
           setActiveVehicle={setActiveVehicle}
           vehicles={vehicles}
@@ -41,7 +41,6 @@ function App() {
           msg={notification.msg}
           onClose={() => setNotification({ ...notification, show: false })}
           />
-          
           <div className="vehicle-info">
             {activeVehicle && <VehicleInfoPanel vehicle={activeVehicle} />}
           </div>
@@ -80,7 +79,6 @@ function App() {
           />
           </div>
           <div className="entries">
-            
           {activeVehicle && <VehicleEntries
           id={activeVehicle.id}
           entries={entries}
