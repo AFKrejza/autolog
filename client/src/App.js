@@ -550,11 +550,13 @@ export function Notification({ show, msg, onClose }) {
 export function NewEntryForm({ id, setNotification, setEntries }) {
   const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
-  //wipes form
+  //clears fields when form is showed
   useEffect(() => {
     if (showEntryForm) {
       setFormData({
-        date: "",
+        day: "",
+        month: "",
+        year: "",
         description: "",
         cost: "",
         mileage: "",
@@ -567,7 +569,9 @@ export function NewEntryForm({ id, setNotification, setEntries }) {
 
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
-    date: "",
+    day: "",
+    month: "",
+    year: "",
     description: "",
     cost: "",
     mileage: "",
@@ -598,16 +602,46 @@ export function NewEntryForm({ id, setNotification, setEntries }) {
           </Modal.Header>
           <Modal.Body>
             <Form>
-              <Form.Group className="mb-3" controlId="formDate">
-                <Form.Label>Date</Form.Label>
+              <Form.Group className="mb-3" controlId="formDay">
+                <Form.Label>Day</Form.Label>
                 <Form.Control
                   required
-                  placeholder="Date in YYYY-MM-DD format" //TODO: make this more user friendly!
-                  name="date"
-                  value={formData.date}
+                  placeholder="Day (1-31)" //TODO: make this more user friendly!
+                  name="day"
+                  value={formData.day}
                   onChange={handleChange}
-                  type="text"
+                  type="number"
+                  min={1}
                   minLength={1}
+                  maxLength={2}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formMonth">
+                <Form.Label>Month</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Month (January = 1, etc)" //TODO: make this more user friendly!
+                  name="month"
+                  value={formData.month}
+                  onChange={handleChange}
+                  type="number"
+                  min={1}
+                  minLength={1}
+                  maxLength={2}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="formYear">
+                <Form.Label>Year</Form.Label>
+                <Form.Control
+                  required
+                  placeholder="Year"
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  type="number"
+                  min={1800}
+                  minLength={4}
+                  maxLength={4}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="formDescription">
@@ -702,36 +736,63 @@ export function NewEntryForm({ id, setNotification, setEntries }) {
 
 //TODO: update entry list
 export async function handleCreateEntry(id, formData, setNotification, setEntries, setShowEntryForm) {
+  //validate date (day, month, year
+
   console.log(id);
   const url = `${SERVER_URL}/entries/create`;
-  let vehicleId = parseInt(id, 10);
-  let date = formData.date;
+  let vehicleId = parseInt(id, 10); //TODO: just set it as id
+  let year = formData.year;
+  let month = formData.month;
+  let day = formData.day;
   let description = formData.description;
   let cost = parseInt(formData.cost, 10);
   let mileage = parseInt(formData.mileage, 10);
   let mechanic = formData.mechanic;
   let category = formData.category;
   let notes = formData.notes;
-  console.log(vehicleId);
-  
-  //validate data
-  //TODO: Add an alert here for each one
-  if (date.length < 1) {
-    setNotification({ show: true, msg: "Invalid date" });
-    return;
+  console.log(year, month, day);
+
+  //Validations array, cleaner than 10+ if/else statements, but slower since it always checks them all
+  //Each check should be true, if false, then it'll send the msg notification (cuz of !check)
+  //TODO: verify that cost is always a number, otherwise use isNan(cost)
+  const validations = [
+    { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //TODO: this should never happen and should probably be handled by the backend if it does
+    { check: year && year >= 0 && [4].includes(year.length), msg: "Invalid year: minimum 1800" },
+    { check: month && month > 0 && month <= 12 && [1,2].includes(month.length), msg: "Invalid month: January = 1, February = 2, etc" },
+    { check: day && day > 0 && day <= 31 && [1,2].includes(day.length), msg: "Invalid day: 1 - 31" },
+    { check: description, msg: "Missing description" },
+    { check: cost && cost >= 0, msg: "Invalid cost: must be integer 0 or greater" },
+    { check: mileage && mileage >= 0, msg: "Invalid mileage: must be 0 or greater" },
+    { check: mechanic, msg: "Invalid mechanic" },
+    { check: category, msg: "Invalid category" },
+    { check: notes, msg: "Invalid notes" },
+  ];
+
+  for (const { check, msg } of validations) { //destructuring
+    if (!check) {
+      setNotification({ show: true, msg });
+      return;
+    }
   }
-  else if (description.length < 1) {
-    setNotification({ show: true, msg: "Invalid description" });
-    return;
-  } 
-  else if (cost <= 0 || !Number.isInteger(cost)) {
-    setNotification({ show: true, msg: "Invalid cost: must be integer" });
-    return;
+
+  //TODO: add leap year and precise date validation (find a function or component that can do it)
+  //if (day >= 29 && month == 2 && year % 4 == 0) {
+  //  if (year % 100 == 0) return;
+  //  if (year % 400 == 0) return false;
+  //}
+
+  //now combine year month day once they've been validated
+  //use padStart method: this could just be a function but alas, time constraint
+  let dayStr = day;
+  let monthStr = month;
+  if (day.length == 1) {
+    dayStr = String(day).padStart(2, "0");
   }
-  else if (cost <= 0 || !Number.isInteger(cost)) {
-    setNotification({ show: true, msg: "Invalid cost: must be integer" });
-    return;
+  if (month.length == 1) {
+    monthStr = String(month).padStart(2, "0")
   }
+  let date = `${year}-${monthStr}-${dayStr}`;
+  console.log(date);
 
   try {
     const response = await fetch(url, {
