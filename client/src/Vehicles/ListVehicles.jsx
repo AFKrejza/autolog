@@ -1,0 +1,33 @@
+import { useState, useEffect } from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { SERVER_URL } from '../App';
+
+//get vehicle list
+export function ListVehicles({ setActiveVehicle, vehicles, setVehicles }) {
+  const url = `${SERVER_URL}/vehicles/list`;
+
+  //TODO: make this a helper function and use it elsewhere, like in handleUpdateVehicle
+  useEffect( () => {
+    async function getList() {
+      const response = await fetch(url);
+      const json = await response.json();
+      setVehicles(json);
+    }
+    getList();
+  }, []);
+
+  return (
+    <ListGroup>
+      {vehicles.map(vehicle =>
+    <ListGroup.Item
+      key={vehicle.id}
+      action
+      onClick={() => setActiveVehicle(vehicle)}
+    >
+      <div>{vehicle.make} {vehicle.model} {vehicle.year}</div>
+      <div> Last updated: {vehicle.updatedAt}</div>
+    </ListGroup.Item>
+    )}
+  </ListGroup>
+  );
+}
