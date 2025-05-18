@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { SERVER_URL } from '../App';
+import { handleDeleteEntry } from './helpers/handleDeleteEntry';
 
-export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm }) {
+export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm, setNotification }) {
   //console.log(id);
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
@@ -56,7 +57,13 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setSho
           >
             Edit
           </Button>
-          <Button>
+          <Button
+            onClick={async () => {
+              const deleteId = entry.id;
+              setActiveEntry(entry);
+              await handleDeleteEntry(deleteId, setNotification, setEntries, setActiveEntry);
+            }}
+          >
             Delete
           </Button>  
         </td>

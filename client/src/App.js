@@ -83,6 +83,7 @@ function App() {
           setEntries={setEntries}
           setActiveEntry={setActiveEntry}
           setShowEntryForm={setShowEntryForm}
+          setNotification={setNotification}
           />}
           </div>
         </div>
