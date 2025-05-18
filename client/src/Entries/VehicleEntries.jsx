@@ -1,15 +1,9 @@
-import { useState, useEffect } from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
+import { useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Toast from 'react-bootstrap/Toast';
 import { SERVER_URL } from '../App';
 
-export function VehicleEntries({ id, entries, setEntries }) {
+export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm }) {
   //console.log(id);
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
@@ -37,6 +31,7 @@ export function VehicleEntries({ id, entries, setEntries }) {
           <th>Created at</th>
           <th>Updated at</th>
           <th>ID</th>
+          <th>Modify</th>
         </tr>
       </thead>
       <tbody>
@@ -52,6 +47,19 @@ export function VehicleEntries({ id, entries, setEntries }) {
         <td>{entry.createdAt}</td>
         <td>{entry.updatedAt}</td>
         <td>{entry.id}</td>
+        <td>
+          <Button
+            onClick={() => {
+              setActiveEntry(entry);
+              setShowEntryForm(true);
+            }}
+          >
+            Edit
+          </Button>
+          <Button>
+            Delete
+          </Button>  
+        </td>
         </tr>
       )}
       </tbody>

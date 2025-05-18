@@ -9,6 +9,7 @@ import { NewVehicleForm } from './Vehicles/NewVehicleForm';
 import { UpdateVehicleForm } from './Vehicles/UpdateVehicleForm';
 import { DeleteVehicle } from './Vehicles/DeleteVehicle';
 import { NewEntryForm } from './Entries/NewEntryForm';
+import { UpdateEntryForm } from './Entries/UpdateEntryForm';
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -17,6 +18,8 @@ function App() {
   const [notification, setNotification] = useState({ show: false, msg: "" });
   const [vehicles, setVehicles] = useState([]);
   const [entries, setEntries] = useState([]);
+  const [activeEntry, setActiveEntry] = useState();
+  const [showEntryForm, setShowEntryForm] = useState(false);
 
   return (
     <div className="App">
@@ -62,6 +65,14 @@ function App() {
           setNotification={setNotification}
           setEntries={setEntries}
           />}
+          {activeEntry && <UpdateEntryForm
+            setNotification={setNotification}
+            setEntries={setEntries}
+            setActiveEntry={setActiveEntry}
+            activeEntry={activeEntry}
+            setShowEntryForm={setShowEntryForm}
+            showEntryForm={showEntryForm}
+          />}
           <div className="vehicle-info">
             {activeVehicle && <ViewVehicle vehicle={activeVehicle} />}
           </div>
@@ -70,6 +81,8 @@ function App() {
           id={activeVehicle.id}
           entries={entries}
           setEntries={setEntries}
+          setActiveEntry={setActiveEntry}
+          setShowEntryForm={setShowEntryForm}
           />}
           </div>
         </div>

@@ -29,7 +29,6 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
   else if (id <= 0 || !Number.isInteger(id)) {
     setNotification({ show: true, msg: "Invalid ID: must be integer & vehicle must exist"}); //this should never happen, but check it anyway. The backend also verifies the ID properly.
   }
-  console.log(id);
 
   try {
     const response = await fetch(url, {
@@ -48,7 +47,6 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
     const updated = await response.json();
     setActiveVehicle(updated); //not needed
     setNotification({ show: true, msg: "Vehicle updated" });
-    console.log(updated);
     //Updating the list: I could replace the vehicle, or i could get the list again. Replace it
     setVehicles(prevVehicles =>
       prevVehicles.map(v => v.id === updated.id ? updated : v)
