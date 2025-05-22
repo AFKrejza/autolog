@@ -39,13 +39,8 @@ export function UpdateVehicleForm({ setActiveVehicle, setVehicles, setNotificati
 
   return (
     <>
-    {activeForm && (
-      <div
-        className="modal show"
-        style={{ display: 'block', position: 'initial' }}
-      >
-        <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setActiveForm(false)}>
+        <Modal show onHide={() => setActiveForm(null)}>
+          <Modal.Header closeButton>
             <Modal.Title>Update Vehicle</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -90,15 +85,13 @@ export function UpdateVehicleForm({ setActiveVehicle, setVehicles, setNotificati
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setActiveForm(false)} variant="secondary">Cancel</Button>
+            <Button onClick={() => setActiveForm(null)} variant="secondary">Cancel</Button>
             <Button onClick={async () => await handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setActiveForm)}
             variant="primary" type="submit">
               Submit
             </Button>
           </Modal.Footer>
-        </Modal.Dialog>
-      </div>
-    )}
+        </Modal>
     </>
   )
 }

@@ -57,13 +57,8 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setA
   //<Button onClick={() => setShowEntryForm(true)} variant="primary">Update Entry</Button>
   return (
     <>
-    {setActiveForm && (
-      <div
-        className="modal show"
-        style={{ display: 'block', position: 'initial' }}
-      >
-        <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setActiveForm(null)}>
+        <Modal show onHide={() => setActiveForm(null)}>
+          <Modal.Header closeButton>
             <Modal.Title>Update Entry</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -193,9 +188,7 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setA
               Submit
             </Button>
           </Modal.Footer>
-        </Modal.Dialog>
-      </div>
-    )}
+        </Modal>
     </>
   )
 }

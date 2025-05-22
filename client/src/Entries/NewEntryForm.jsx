@@ -51,14 +51,8 @@ export function NewEntryForm({ id, setNotification, setEntries, setActiveForm })
   //<Button onClick={() => setShowEntryForm(true)} variant="primary">New Entry</Button>
   return (
     <>
-    
-    {setActiveForm && (
-      <div
-        className="modal show"
-        style={{ display: 'block', position: 'initial' }}
-      >
-        <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setActiveForm(null)}>
+        <Modal show onHide={() => setActiveForm(null)}>
+          <Modal.Header closeButton>
             <Modal.Title>New Entry</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -188,9 +182,7 @@ export function NewEntryForm({ id, setNotification, setEntries, setActiveForm })
               Submit
             </Button>
           </Modal.Footer>
-        </Modal.Dialog>
-      </div>
-    )}
+        </Modal>
     </>
   )
 }
