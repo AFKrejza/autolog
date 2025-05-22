@@ -7,8 +7,8 @@ import { handleUpdateVehicle } from './helpers/handleUpdateVehicle';
 
 //update vehicle component
 //TODO: make a VehicleForm component and use it in create and update vehicle
-export function UpdateVehicleForm({ setActiveVehicle, setNotification, vehicles, setVehicles, activeVehicle }) {
-  const [showVehicleForm, setshowVehicleForm] = useState(false); //show or hide, default hide
+export function UpdateVehicleForm({ setActiveVehicle, setNotification, vehicles, setVehicles, activeVehicle, setShowVehicleForm, showVehicleForm }) {
+  //const [showVehicleForm, setshowVehicleForm] = useState(false); //show or hide, default hide
   //const url = `${SERVER_URL}/vehicles/update`;
 
   //initialize the keys & empty values
@@ -39,16 +39,16 @@ export function UpdateVehicleForm({ setActiveVehicle, setNotification, vehicles,
     //console.log(input.target.value);
   }
 
+  //<Button onClick={() => setshowVehicleForm(true)} variant="primary">Update Vehicle</Button>
   return (
     <>
-    <Button onClick={() => setshowVehicleForm(true)} variant="primary">Update Vehicle</Button>
     {showVehicleForm && (
       <div
         className="modal show"
         style={{ display: 'block', position: 'initial' }}
       >
         <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setshowVehicleForm(false)}>
+          <Modal.Header closeButton onClick={() => setShowVehicleForm(false)}>
             <Modal.Title>Update Vehicle</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -93,8 +93,8 @@ export function UpdateVehicleForm({ setActiveVehicle, setNotification, vehicles,
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setshowVehicleForm(false)} variant="secondary">Cancel</Button>
-            <Button onClick={async () => await handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm)}
+            <Button onClick={() => setShowVehicleForm(false)} variant="secondary">Cancel</Button>
+            <Button onClick={async () => await handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setShowVehicleForm)}
             variant="primary" type="submit">
               Submit
             </Button>

@@ -7,8 +7,8 @@ import { handleCreateEntry } from './helpers/handleCreateEntry';
 
 //TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
 //create new entry - takes vehicle ID
-export function NewEntryForm({ id, setNotification, setEntries }) {
-  const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
+export function NewEntryForm({ id, setNotification, setEntries, setShowEntryForm, showEntryForm }) {
+  //const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
   //clears fields when form is showed
   useEffect(() => {
@@ -48,9 +48,10 @@ export function NewEntryForm({ id, setNotification, setEntries }) {
     })
   }
 
+  //<Button onClick={() => setShowEntryForm(true)} variant="primary">New Entry</Button>
   return (
     <>
-    <Button onClick={() => setShowEntryForm(true)} variant="primary">New Entry</Button>
+    
     {showEntryForm && (
       <div
         className="modal show"
