@@ -3,7 +3,7 @@ import { SERVER_URL } from '../../App';
 //call api
 //TODO: add error management
 //TODO: update vehicle list
-export async function handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm) {
+export async function handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setActiveForm) {
   const url = `${SERVER_URL}/vehicles/update`;
   //dont destructure, order could change.
   let make = formData.make;
@@ -45,14 +45,14 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
       })
     });
     const updated = await response.json();
-    setActiveVehicle(updated); //not needed
+    //setActiveVehicle(updated); //not needed
     setNotification({ show: true, msg: "Vehicle updated" });
     //Updating the list: I could replace the vehicle, or i could get the list again. Replace it
     setVehicles(prevVehicles =>
       prevVehicles.map(v => v.id === updated.id ? updated : v)
     );
 
-    setshowVehicleForm(false);
+    setActiveForm();
   }
   catch (error) {
     console.error(error);

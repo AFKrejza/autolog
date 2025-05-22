@@ -7,12 +7,12 @@ import { handleCreateEntry } from './helpers/handleCreateEntry';
 
 //TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
 //create new entry - takes vehicle ID
-export function NewEntryForm({ id, setNotification, setEntries, setShowEntryForm, showEntryForm }) {
+export function NewEntryForm({ id, setNotification, setEntries, setActiveForm }) {
   //const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
   //clears fields when form is showed
   useEffect(() => {
-    if (showEntryForm) {
+    if (setActiveForm) {
       setFormData({
         day: "",
         month: "",
@@ -25,7 +25,7 @@ export function NewEntryForm({ id, setNotification, setEntries, setShowEntryForm
         notes: "",
       });
     }
-  }, [showEntryForm]);
+  }, [setActiveForm]);
 
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
@@ -52,13 +52,13 @@ export function NewEntryForm({ id, setNotification, setEntries, setShowEntryForm
   return (
     <>
     
-    {showEntryForm && (
+    {setActiveForm && (
       <div
         className="modal show"
         style={{ display: 'block', position: 'initial' }}
       >
         <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setShowEntryForm(false)}>
+          <Modal.Header closeButton onClick={() => setActiveForm(null)}>
             <Modal.Title>New Entry</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -182,8 +182,8 @@ export function NewEntryForm({ id, setNotification, setEntries, setShowEntryForm
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setShowEntryForm(false)} variant="secondary">Cancel</Button>
-            <Button onClick={async () => await handleCreateEntry(id, formData, setNotification, setEntries, setShowEntryForm)}
+            <Button onClick={() => setActiveForm(null)} variant="secondary">Cancel</Button>
+            <Button onClick={async () => await handleCreateEntry(id, formData, setNotification, setEntries, setActiveForm)}
             variant="primary" type="submit">
               Submit
             </Button>

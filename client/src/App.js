@@ -21,17 +21,7 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [entries, setEntries] = useState([]);
   const [activeEntry, setActiveEntry] = useState();
-
-  //this is pretty messy.
-  //TODO: Issue: the forms all have their own states. Either have a global state, or use both show states correctly
-  const [showEntryForm, setShowEntryForm] = useState(false);
-  const [newEntryForm, setNewEntryForm] = useState(false);
-  const [updateEntryForm, setUpdateEntryForm] = useState(false);
-  const [showVehicleForm, setShowVehicleForm] = useState(false);
-  const [newVehicleForm, setNewVehicleForm] = useState(false);
-  const [updateVehicleForm, setUpdateVehicleForm] = useState(false);
-
-  //const [activeForm, setActiveForm] = useState(null);
+  const [activeForm, setActiveForm] = useState(null); //manages all forms. states: new- update- Entry / Vehicle
 
   return (
     <div className="App">
@@ -42,10 +32,7 @@ function App() {
         <div className="App-list">
           <h1>Vehicles</h1>
           <Button onClick={() => {
-            setActiveVehicle();
-            setUpdateVehicleForm(false);
-            setShowVehicleForm(true);
-            setNewVehicleForm(true);
+            setActiveForm('newVehicle');
           }}>
           New Vehicle
           </Button>
@@ -53,8 +40,7 @@ function App() {
           setActiveVehicle={setActiveVehicle}
           vehicles={vehicles}
           setVehicles={setVehicles}
-          setShowEntryForm={setShowEntryForm}
-          setShowVehicleForm={setShowVehicleForm}
+          setActiveForm={setActiveForm}
           />
         </div>
         <div className="content">
@@ -68,29 +54,23 @@ function App() {
           </div>
           <div className="buttons">
             <Button onClick={() => {
-              setActiveEntry(false);
-              setUpdateEntryForm(false);
-              setNewEntryForm(true);
-              setShowEntryForm(true);
+              setActiveForm('newEntry');
             }} variant="primary">
               New Entry
             </Button>
             <Button onClick={() => {
-              setShowVehicleForm(true);
-              setUpdateVehicleForm(true);
-              setShowEntryForm(false);
+              setActiveForm('updateVehicle');
               }}
               variant="primary">
                 Update Vehicle
             </Button>
-            {activeVehicle && showVehicleForm && updateVehicleForm && <UpdateVehicleForm
+            {activeVehicle && activeForm === 'updateVehicle' && <UpdateVehicleForm
             setActiveVehicle = {setActiveVehicle}
-            vehicles={vehicles}
             setVehicles={setVehicles}
             setNotification={setNotification}
             activeVehicle={activeVehicle}
-            setShowVehicleForm={setShowVehicleForm}
-            showVehicleForm={showVehicleForm}
+            setActiveForm={setActiveForm}
+            activeForm={activeForm}
           />}
           {activeVehicle && <DeleteVehicle
             setNotification={setNotification}
@@ -99,32 +79,27 @@ function App() {
             setActiveVehicle={setActiveVehicle}
           />}
           
-          {showVehicleForm && newVehicleForm && <NewVehicleForm
+          {activeForm === 'newVehicle' && <NewVehicleForm
           setActiveVehicle = {setActiveVehicle}
           vehicles={vehicles}
           setVehicles={setVehicles}
           setNotification={setNotification}
-          setNewVehicleForm={setNewVehicleForm}
-          setShowVehicleForm={setShowVehicleForm}
-          showVehicleForm={showVehicleForm}
+          setActiveForm={setActiveForm}
+          activeForm={activeForm}
           />}
           </div>
-          {activeVehicle && showEntryForm && newEntryForm && <NewEntryForm
+          {activeVehicle && activeForm === 'newEntry' && <NewEntryForm
           id={activeVehicle.id}
           setNotification={setNotification}
           setEntries={setEntries}
-          setShowEntryForm={setShowEntryForm}
-          showEntryForm={showEntryForm}
+          setActiveForm={setActiveForm}
           />}
-          {activeEntry && showEntryForm && updateEntryForm && <UpdateEntryForm
+          {activeEntry && activeForm === 'updateEntry' && <UpdateEntryForm
             setNotification={setNotification}
             setEntries={setEntries}
             setActiveEntry={setActiveEntry}
             activeEntry={activeEntry}
-            setShowEntryForm={setShowEntryForm}
-            showEntryForm={showEntryForm}
-            setNewEntryForm={setNewEntryForm}
-            setUpdateEntryForm={setUpdateEntryForm}
+            setActiveForm={setActiveForm}
           />}
           <div className="entries">
           {activeVehicle && <VehicleEntries
@@ -132,10 +107,8 @@ function App() {
           entries={entries}
           setEntries={setEntries}
           setActiveEntry={setActiveEntry}
-          setShowEntryForm={setShowEntryForm}
           setNotification={setNotification}
-          setNewEntryForm={setNewEntryForm}
-          setUpdateEntryForm={setUpdateEntryForm}
+          setActiveForm={setActiveForm}
           />}
           </div>
         </div>

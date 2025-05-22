@@ -7,7 +7,7 @@ import { handleUpdateEntry } from './helpers/handleUpdateEntry';
 
 //TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
 //create new entry - takes vehicle ID
-export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setShowEntryForm, showEntryForm }) {
+export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setActiveForm }) {
   //const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
   //initialize the keys & empty values
@@ -42,7 +42,7 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setS
         id: activeEntry.id
       });
     }
-  }, [activeEntry, showEntryForm]);
+  }, [activeEntry, setActiveForm]);
 
   //handle form change & update formData
   //fixed this to handle strings and numbers
@@ -57,13 +57,13 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setS
   //<Button onClick={() => setShowEntryForm(true)} variant="primary">Update Entry</Button>
   return (
     <>
-    {showEntryForm && (
+    {setActiveForm && (
       <div
         className="modal show"
         style={{ display: 'block', position: 'initial' }}
       >
         <Modal.Dialog>
-          <Modal.Header closeButton onClick={() => setShowEntryForm(false)}>
+          <Modal.Header closeButton onClick={() => setActiveForm(null)}>
             <Modal.Title>Update Entry</Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -187,8 +187,8 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setS
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={() => setShowEntryForm(false)} variant="secondary">Cancel</Button>
-            <Button onClick={async () => await handleUpdateEntry(formData, setNotification, setEntries, setShowEntryForm)}
+            <Button onClick={() => setActiveForm(null)} variant="secondary">Cancel</Button>
+            <Button onClick={async () => await handleUpdateEntry(formData, setNotification, setEntries, setActiveForm)}
             variant="primary" type="submit">
               Submit
             </Button>

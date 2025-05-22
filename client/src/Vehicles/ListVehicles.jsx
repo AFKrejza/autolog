@@ -3,7 +3,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { SERVER_URL } from '../App';
 
 //get vehicle list
-export function ListVehicles({ setActiveVehicle, vehicles, setVehicles, setShowEntryForm, setShowVehicleForm }) {
+export function ListVehicles({ setActiveVehicle, vehicles, setVehicles, setActiveForm }) {
   const url = `${SERVER_URL}/vehicles/list`;
 
   useEffect( () => {
@@ -23,9 +23,7 @@ export function ListVehicles({ setActiveVehicle, vehicles, setVehicles, setShowE
       action
       onClick={() => {
         setActiveVehicle(vehicle);
-        setShowEntryForm(false);
-        setShowVehicleForm(false);
-        
+        setActiveForm(null);
       }}>
       <div>{vehicle.make} {vehicle.model} {vehicle.year}</div>
       <div> Last updated: {vehicle.updatedAt}</div>

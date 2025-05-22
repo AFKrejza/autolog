@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { SERVER_URL } from '../App';
 import { handleDeleteEntry } from './helpers/handleDeleteEntry';
 
-export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm, setNotification, setUpdateEntryForm, setNewEntryForm }) {
+export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm, setNotification, setActiveForm }) {
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
   useEffect( () => {
@@ -51,9 +51,7 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setSho
           <Button
             onClick={() => {
               setActiveEntry(entry);
-              setShowEntryForm(true);
-              setNewEntryForm(false);
-              setUpdateEntryForm(true);
+              setActiveForm('updateEntry');
             }}
           >
             Edit

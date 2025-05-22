@@ -1,7 +1,7 @@
 import { SERVER_URL } from '../../App';
 
 //TODO: update entry list
-export async function handleUpdateEntry(formData, setNotification, setEntries, setShowEntryForm) {
+export async function handleUpdateEntry(formData, setNotification, setEntries, setActiveForm) {
   const url = `${SERVER_URL}/entries/update`;
   let vehicleId = formData.vehicleId;
   let year = formData.year;
@@ -88,7 +88,7 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
     setEntries(prevEntries =>
       prevEntries.map(e => e.id === json.id ? json : e)
     );
-    setShowEntryForm(false);
+    setActiveForm(null);
 
   }
   catch (error) {

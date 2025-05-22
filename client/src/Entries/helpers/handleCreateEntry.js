@@ -1,7 +1,7 @@
 import { SERVER_URL } from '../../App';
 
 //TODO: update entry list
-export async function handleCreateEntry(id, formData, setNotification, setEntries, setShowEntryForm) {
+export async function handleCreateEntry(id, formData, setNotification, setEntries, setActiveForm) {
   //validate date (day, month, year
 
   console.log(id);
@@ -91,7 +91,7 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
     //setActiveVehicle(vehicle); it should be json
     //setVehicles(prevVehicles => [...prevVehicles, json]);
     setEntries(prevEntries => [...prevEntries, json]);
-    setShowEntryForm(false);
+    setActiveForm(null);
 
   }
   catch (error) {

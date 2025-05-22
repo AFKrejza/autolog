@@ -1,18 +1,9 @@
-import { useState, useEffect } from 'react';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Toast from 'react-bootstrap/Toast';
 import { SERVER_URL } from '../../App';
 
 //call api
 //TODO: add error management
 //TODO: update vehicle list
-export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles, setshowVehicleForm) {
+export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles, setActiveForm) {
   const url = `${SERVER_URL}/vehicles/create`;
   let make = vehicle.make;
   let model = vehicle.model;
@@ -54,7 +45,7 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
     //setActiveVehicle(vehicle); it should be json
     setVehicles(prevVehicles => [...prevVehicles, json]);
-    setshowVehicleForm(false);
+    setActiveForm(null);
 
   }
   catch (error) {
