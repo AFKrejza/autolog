@@ -29,16 +29,16 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
     <div>
       Page: {activePage}
     </div>
-    <Table striped bordered hover>
+    <Table striped bordered hover size="sm">
       <thead>
         <tr>
-          <th>Date</th>
+          <th className="date">Date</th>
           <th>Description</th>
           <th>Cost</th>
           <th>Mileage</th>
           <th>Mechanic</th>
           <th>Category</th>
-          <th>Notes</th>
+          <th className="notes">Notes</th>
           <th>Created at</th>
           <th>Updated at</th>
           <th>ID</th>
@@ -48,13 +48,13 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
       <tbody>
       {entriesPage.map(entry => 
         <tr key={entry.id}>
-        <td>{entry.date}</td>
+        <td className="date">{entry.date}</td>
         <td>{entry.description}</td>
         <td>{entry.cost}</td>
         <td>{entry.mileage}</td>
         <td>{entry.mechanic}</td>
         <td>{entry.category}</td>
-        <td>{entry.notes}</td>
+        <td className='notes'>{entry.notes}</td>
         <td>{entry.createdAt}</td>
         <td>{entry.updatedAt}</td>
         <td>{entry.id}</td>

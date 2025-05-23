@@ -42,6 +42,20 @@
   align-items: flex-start;
   padding: 1rem 1rem 1rem 0;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.content .entries .notes {
+  overflow-y: auto;
+  max-width: 200px;
+  max-height: 100px;
+  word-break: break-all;
+}
+
+.content .entries table {
+  overflow-x: auto;
+  width: 100%;
 }
 
 .main .content .vehicle-info {
