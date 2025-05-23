@@ -10,6 +10,7 @@ import { UpdateVehicleForm } from "./Vehicles/UpdateVehicleForm";
 import { NewEntryForm } from "./Entries/NewEntryForm";
 import { UpdateEntryForm } from "./Entries/UpdateEntryForm";
 import { VehicleInfoPanel } from "./Vehicles/VehicleInfo/VehicleInfoPanel";
+import { Welcome } from "./Components/Welcome";
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -22,6 +23,7 @@ function App() {
   const [activeEntry, setActiveEntry] = useState();
   const [activeForm, setActiveForm] = useState(null); //manages all forms. states: new- update- Entry / Vehicle
   const [activePage, setActivePage] = useState(0); //doesn't control entry list visibility, only page
+  //const [welcome, setWelcome] = useState(true);
 
   return (
     <div className="App">
@@ -49,6 +51,11 @@ function App() {
           />
         </div>
         <div className="content">
+          <div className="welcome">
+            {!activeVehicle && (
+              <Welcome/>
+            )}
+          </div>
           <div className="vehicle-info">
             {activeVehicle && (
               <VehicleInfoPanel
