@@ -47,11 +47,6 @@ function App() {
           />
         </div>
         <div className="content">
-          <Notification
-            show={notification.show}
-            msg={notification.msg}
-            onClose={() => setNotification({ ...notification, show: false })}
-          />
           <div className="vehicle-info">
             {activeVehicle && (
               <VehicleInfoPanel
@@ -78,6 +73,11 @@ function App() {
           </div>
         </div>
       </div>
+      <Notification
+        show={notification.show}
+        msg={notification.msg}
+        onClose={() => setNotification({ ...notification, show: false })}
+      />
       {activeForm === "newVehicle" && (
         <NewVehicleForm
           setActiveVehicle={setActiveVehicle}

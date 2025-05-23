@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { SERVER_URL } from '../App';
 import { handleDeleteEntry } from './helpers/handleDeleteEntry';
 
-export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setShowEntryForm, setNotification, setActiveForm }) {
+export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNotification, setActiveForm }) {
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
   useEffect( () => {
@@ -16,7 +16,7 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setSho
       setEntries(json);
     }
     getEntries();
-  }, [id]);
+  }, [id, url, setEntries]);
   return (
     <Table striped bordered hover>
       <thead>

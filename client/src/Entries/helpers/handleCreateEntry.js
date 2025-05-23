@@ -90,7 +90,7 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
     //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
     //setActiveVehicle(vehicle); it should be json
     //setVehicles(prevVehicles => [...prevVehicles, json]);
-    setEntries(prevEntries => [...prevEntries, json]);
+    setEntries(prevEntries => [json, ...prevEntries]);
     setActiveForm(null);
 
   }
