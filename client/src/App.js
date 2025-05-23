@@ -21,6 +21,7 @@ function App() {
   const [entries, setEntries] = useState([]);
   const [activeEntry, setActiveEntry] = useState();
   const [activeForm, setActiveForm] = useState(null); //manages all forms. states: new- update- Entry / Vehicle
+  const [activePage, setActivePage] = useState(0); //doesn't control entry list visibility, only page
 
   return (
     <div className="App">
@@ -44,6 +45,7 @@ function App() {
             vehicles={vehicles}
             setVehicles={setVehicles}
             setActiveForm={setActiveForm}
+            setActivePage={setActivePage}
           />
         </div>
         <div className="content">
@@ -68,6 +70,8 @@ function App() {
                 setActiveEntry={setActiveEntry}
                 setNotification={setNotification}
                 setActiveForm={setActiveForm}
+                activePage={activePage}
+                setActivePage={setActivePage}
               />
             )}
           </div>

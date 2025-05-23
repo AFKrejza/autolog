@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { SERVER_URL } from '../App';
 import { handleDeleteEntry } from './helpers/handleDeleteEntry';
 
-export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNotification, setActiveForm }) {
+export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNotification, setActiveForm, activePage, setActivePage }) {
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
   useEffect( () => {
@@ -16,8 +16,19 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
       setEntries(json);
     }
     getEntries();
-  }, [id, url, setEntries]);
+  }, [id, url, setEntries,]);
+
+  //Pagination
+  //activePage is 1 when activeVehicle state is set
+  let start = (activePage -1) * 10;
+  let end = start + 10;
+  let entriesPage = entries.slice(start, end);
+
   return (
+    <>
+    <div>
+      Page: {activePage}
+    </div>
     <Table striped bordered hover>
       <thead>
         <tr>
@@ -35,7 +46,7 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
         </tr>
       </thead>
       <tbody>
-      {entries.map(entry => 
+      {entriesPage.map(entry => 
         <tr key={entry.id}>
         <td>{entry.date}</td>
         <td>{entry.description}</td>
@@ -70,5 +81,10 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
       )}
       </tbody>
     </Table>
+    <div>
+    <Button onClick ={() => setActivePage(activePage - 1)}>{'<'}</Button>
+    <Button onClick ={() => setActivePage(activePage + 1)}>{'>'}</Button>
+    </div>
+    </>
   )
 }
