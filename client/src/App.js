@@ -16,6 +16,7 @@ import { VehicleStats } from "./Vehicles/VehicleInfo/VehicleStats";
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function App() {
+  //context API would be cleaner, but it works.
   const [activeVehicle, setActiveVehicle] = useState();
   const [notification, setNotification] = useState({ show: false, msg: "" });
   const [vehicles, setVehicles] = useState([]);

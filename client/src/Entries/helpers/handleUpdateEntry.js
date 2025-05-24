@@ -1,6 +1,5 @@
 import { SERVER_URL } from '../../App';
 
-//TODO: update entry list
 export async function handleUpdateEntry(formData, setNotification, setEntries, setActiveForm) {
   const url = `${SERVER_URL}/entries/update`;
   let vehicleId = formData.vehicleId;
@@ -20,7 +19,7 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
   //Each check should be true, if false, then it'll send the msg notification (cuz of !check)
   //TODO: verify that cost is always a number, otherwise use isNan(cost)
   const validations = [
-    { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //TODO: this should never happen and should probably be handled by the backend if it does
+    { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //this should never happen and should probably be handled by the backend if it does
     { check: year && year >= 0 && [4].includes(String(year).length), msg: "Invalid year: minimum 1800, must be 4 digits" },
     { check: month && month > 0 && month <= 12 && [1,2].includes(String(month).length), msg: "Invalid month: January = 1, February = 2, etc" },
     { check: day && day > 0 && day <= 31 && [1,2].includes(String(day).length), msg: "Invalid day: 1 - 31" },
@@ -39,7 +38,7 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
     }
   }
 
-  //TODO: add leap year and precise date validation (find a function or component that can do it)
+  //TODO: add leap year and precise date validation via .toDateString()
   //if (day >= 29 && month == 2 && year % 4 == 0) {
   //  if (year % 100 == 0) return;
   //  if (year % 400 == 0) return false;
@@ -94,6 +93,5 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
   catch (error) {
     console.error(error);
     setNotification({ show: true, msg: "Error updating entry" });    
-    //TODO: show toast error notification with autohide
   }
 }

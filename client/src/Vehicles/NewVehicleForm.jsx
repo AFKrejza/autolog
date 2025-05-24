@@ -6,8 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import { handleCreateVehicle } from './helpers/handleCreateVehicle';
 
 //create new vehicle component
-//TODO: make a VehicleForm component and use it in create and update vehicle
-export function NewVehicleForm({ setActiveVehicle, vehicles, setVehicles, setNotification, setActiveForm, activeForm }) {
+export function NewVehicleForm({ setActiveVehicle, setVehicles, setNotification, setActiveForm, }) {
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
     make: "",

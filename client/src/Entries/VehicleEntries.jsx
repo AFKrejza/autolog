@@ -63,6 +63,7 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
         <td>{entry.id}</td>
         <td>
           <Button
+          variant="success"
             onClick={() => {
               setActiveEntry(entry);
               setActiveForm('updateEntry');
@@ -71,6 +72,7 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
             Edit
           </Button>
           <Button
+            variant="danger"
             onClick={async () => {
               const deleteId = entry.id;
               setActiveEntry(entry);

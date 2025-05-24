@@ -1,10 +1,7 @@
 import { SERVER_URL } from '../../App';
 
-//TODO: update entry list
 export async function handleCreateEntry(id, formData, setNotification, setEntries, setActiveForm) {
-  //validate date (day, month, year
 
-  console.log(id);
   const url = `${SERVER_URL}/entries/create`;
   let vehicleId = parseInt(id, 10); //TODO: just set it as id
   let year = formData.year;
@@ -16,13 +13,12 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
   let mechanic = formData.mechanic;
   let category = formData.category.toLowerCase();
   let notes = formData.notes;
-  console.log(year, month, day);
 
   //Validations array, cleaner than 10+ if/else statements, but slower since it always checks them all
   //Each check should be true, if false, then it'll send the msg notification (cuz of !check)
   //TODO: verify that cost is always a number, otherwise use isNan(cost)
   const validations = [
-    { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //TODO: this should never happen and should probably be handled by the backend if it does
+    { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //this should never happen and should probably be handled by the backend if it does
     { check: year && year >= 0 && [4].includes(year.length), msg: "Invalid year: minimum 1800, must be 4 digits" },
     { check: month && month > 0 && month <= 12 && [1,2].includes(month.length), msg: "Invalid month: January = 1, February = 2, etc" },
     { check: day && day > 0 && day <= 31 && [1,2].includes(day.length), msg: "Invalid day: 1 - 31" },
@@ -41,7 +37,7 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
     }
   }
 
-  //TODO: add leap year and precise date validation (find a function or component that can do it)
+  //TODO: add leap year and precise date validation via .toDateString()
   //if (day >= 29 && month == 2 && year % 4 == 0) {
   //  if (year % 100 == 0) return;
   //  if (year % 400 == 0) return false;
@@ -84,12 +80,8 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
       console.error(`${errorMsg}, HTTP error:`, response.status);
     }
     const json = await response.json();
-    //setActiveVehicle(json);
     setNotification({ show: true, msg: "Entry created" });
     console.log(json);
-    //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
-    //setActiveVehicle(vehicle); it should be json
-    //setVehicles(prevVehicles => [...prevVehicles, json]);
     setEntries(prevEntries => [json, ...prevEntries]);
     setActiveForm(null);
 
@@ -97,6 +89,5 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
   catch (error) {
     console.error(error);
     setNotification({ show: true, msg: "Error creating entry" });    
-    //TODO: show toast error notification with autohide
   }
 }

@@ -43,7 +43,6 @@ const updateVehicleSchema = {
 
 //entry creation schema
 //contains: date, description, cost, mileage, mechanic, category, notes
-//TODO: date is just a number, fix this.
 const entrySchema = {
     type: "object",
     properties: {

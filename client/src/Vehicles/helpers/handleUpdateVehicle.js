@@ -1,8 +1,6 @@
 import { SERVER_URL } from '../../App';
 
 //call api
-//TODO: add error management
-//TODO: update vehicle list
 export async function handleUpdateVehicle(formData, setActiveVehicle, setNotification, setVehicles, setActiveForm) {
   const url = `${SERVER_URL}/vehicles/update`;
   //dont destructure, order could change.
@@ -13,7 +11,6 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
   year = parseInt(year, 10);
   id = parseInt(id, 10);
   //validate data
-  //TODO: Add an alert here for each one
   if (make.length < 1) {
     setNotification({ show: true, msg: "Invalid make" });
     return;
@@ -45,7 +42,6 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
       })
     });
     const updated = await response.json();
-    //setActiveVehicle(updated); //not needed
     setNotification({ show: true, msg: "Vehicle updated" });
     //Updating the list: I could replace the vehicle, or i could get the list again. Replace it
     setVehicles(prevVehicles =>
@@ -57,6 +53,5 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
   catch (error) {
     console.error(error);
     setNotification({ show: true, msg: "Error updating vehicle" });    
-    //TODO: show toast error notification with autohide
   }
 }

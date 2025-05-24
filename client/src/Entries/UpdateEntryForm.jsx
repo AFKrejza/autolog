@@ -5,10 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 
 import { handleUpdateEntry } from './helpers/handleUpdateEntry';
 
-//TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
 //create new entry - takes vehicle ID
 export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setActiveForm }) {
-  //const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
   //initialize the keys & empty values
   const [formData, setFormData] = useState({
@@ -52,9 +50,8 @@ export function UpdateEntryForm({ setNotification, setEntries, activeEntry, setA
       ...formData,
       [name]: type === "number" ? Number(value) : value
     })
-    //console.log(name,type,value);
   }
-  //<Button onClick={() => setShowEntryForm(true)} variant="primary">Update Entry</Button>
+
   return (
     <>
         <Modal show onHide={() => setActiveForm(null)}>

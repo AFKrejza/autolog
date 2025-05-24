@@ -7,7 +7,7 @@
 }
 
 .App-header {
-  background-color: #0138a5;
+  background-color: rgb(13, 110, 230);
   min-height: 56px;
   display: flex;
   flex-direction: column;
@@ -101,6 +101,13 @@
   display: flex;
   align-items: flex-start;
   font-size: 30px;
+}
+
+.content .stats .spendingTable {
+  display: flex;
+  align-items: flex-start;
+  max-height: 100vh;
+  max-width: 40%;
 }
 
 .content .welcome {

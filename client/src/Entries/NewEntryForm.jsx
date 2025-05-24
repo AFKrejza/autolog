@@ -5,10 +5,8 @@ import Modal from 'react-bootstrap/Modal';
 
 import { handleCreateEntry } from './helpers/handleCreateEntry';
 
-//TODO: There's gotta be a better way of doing this. Like creating a new Form.Group based on how many elements the form should have and their names.
 //create new entry - takes vehicle ID
 export function NewEntryForm({ id, setNotification, setEntries, setActiveForm }) {
-  //const [showEntryForm, setShowEntryForm] = useState(false); //show or hide, default hide
 
   //clears fields when form is showed
   useEffect(() => {
@@ -48,7 +46,6 @@ export function NewEntryForm({ id, setNotification, setEntries, setActiveForm })
     })
   }
 
-  //<Button onClick={() => setShowEntryForm(true)} variant="primary">New Entry</Button>
   return (
     <>
         <Modal show onHide={() => setActiveForm(null)}>

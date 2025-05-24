@@ -26,6 +26,7 @@ export function VehicleInfoPanel({
           New Entry
         </Button>
         <Button
+        variant="secondary"
         onClick={() => {
           setShowStats(showStats => !showStats); //toggle button via update function
         }}
@@ -36,7 +37,7 @@ export function VehicleInfoPanel({
           onClick={() => {
             setActiveForm("updateVehicle");
           }}
-          variant="primary"
+          variant="success"
         >
           Update Vehicle
         </Button>

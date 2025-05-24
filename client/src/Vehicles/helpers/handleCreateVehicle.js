@@ -1,17 +1,13 @@
 import { SERVER_URL } from '../../App';
 
 //call api
-//TODO: add error management
-//TODO: update vehicle list
 export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotification, setVehicles, setActiveForm) {
   const url = `${SERVER_URL}/vehicles/create`;
   let make = vehicle.make;
   let model = vehicle.model;
   let year = vehicle.year;
-  let id = vehicle.id;
   year = parseInt(year, 10);
   //validate data
-  //TODO: Add an alert here for each one
   if (make.length < 1) {
     setNotification({ show: true, msg: "Invalid make" });
     return;
@@ -42,8 +38,6 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
     setActiveVehicle(json);
     setNotification({ show: true, msg: "Vehicle created" });
     console.log(json);
-    //TODO: have vehicle list update (or just add the response to it? or does it update since activeVehicle updates?)
-    //setActiveVehicle(vehicle); it should be json
     setVehicles(prevVehicles => [...prevVehicles, json]);
     setActiveForm(null);
 
@@ -51,6 +45,5 @@ export async function handleCreateVehicle(vehicle, setActiveVehicle, setNotifica
   catch (error) {
     console.error(error);
     setNotification({ show: true, msg: "Error creating vehicle" });    
-    //TODO: show toast error notification with autohide
   }
 }

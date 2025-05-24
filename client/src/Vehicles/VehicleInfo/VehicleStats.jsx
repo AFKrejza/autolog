@@ -1,11 +1,6 @@
-import { useState, useEffect } from "react";
 import Table from "react-bootstrap/Table";
 
-import { SERVER_URL } from "../../App";
-
-//TODO: add a helper function to make API calls
 export function VehicleStats({ id, entries }) {
-  //url = `${SERVER_URL}/vehicles/${id}/entries/stats`; //only gets total spent, not really useful and also inefficient.
   let totalCosts = 0;
   let categoryStats = [];
   //factory function to create objects with category name & total cost
@@ -32,7 +27,7 @@ export function VehicleStats({ id, entries }) {
   return (
     <>
       <div className='totalCost'>Total spent: {totalCosts}</div>
-      <div>
+      <div className='spendingTable'>
         <Table striped bordered hover size="sm">
           <thead>
             <tr>

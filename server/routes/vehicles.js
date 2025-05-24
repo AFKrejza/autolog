@@ -169,7 +169,6 @@ router.get("/:id", async (req, res) => {
     catch (error) {
         res.status(400).send({ error: "Error: " + error });
     }
-    //console.log(getVehicle);
     //TODO: if id not found, error 400, for delete function too. 'this does not exist'.
 })
 

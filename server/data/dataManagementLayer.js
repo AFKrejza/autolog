@@ -17,12 +17,9 @@ function dateNow() {
     return date;
 }
 
-//TODO: put newID here and let vehicles and entries use it
-
 //it needs to import vehicles.json via readfile, THEN add data, THEN writefile
 async function createVehicle (data) {
     const allVehicles = [];
-
     
     //add ID to each vehicle, go through all existing ones, start at id 1
     let id = 1;
@@ -37,8 +34,6 @@ async function createVehicle (data) {
     data.updatedAt = dateNow();
 
     allVehicles.push(data);
-    //let now = dateNow();
-    //console.log(now);
     await writeVehicles(allVehicles);
 }
 
@@ -96,7 +91,6 @@ async function deleteVehicle (ID) {
     allVehicles.splice(vehicleIndex, 1); //1 specifies to only delete one vehicle.
     await deleteVehicleEntries(ID);
     await writeVehicles(allVehicles);
-    //console.log("deleted vehicle");
 }
 
 //update vehicle
@@ -185,7 +179,6 @@ async function readEntry (ID) {
 //import vehicle list, check if data.vehicleId matches a vehicle
 //then create new entry, add vehicleId to it
 //assign it an id
-//TODO: decide how to sort them: by date
 async function createEntry (entry) {
     const allEntries = [];
     //add ID to each entry, go through all existing ones, start at id 1
@@ -207,7 +200,6 @@ async function createEntry (entry) {
     await sortEntries();
     //update vehicle updatedAt to current date, find index of vehicle
     const allVehicles = await readVehicles();
-    //const vehicleIndex = allVehicles.findIndex(vehicle => vehicle.id === entry.vehicleId);
     allVehicles[vehicleIndex].updatedAt = dateNow(); //TODO: fix bug here
     await writeVehicles(allVehicles);
     return entry;
@@ -267,8 +259,6 @@ async function readVehicleEntries (ID) {
     }
         return vehicleEntries; //return empty array if no entries found
 }
-//TODO: figure out how to only send X entries at a time (to display ONLY e.g. 10, 20, 50, 100 entries), use new function since this sends ALL
-//or rewrite it to take an argument
 
 //delete ALL entries belonging to a vehicle
 async function deleteVehicleEntries (ID) {

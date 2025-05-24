@@ -6,7 +6,6 @@ import Modal from 'react-bootstrap/Modal';
 import { handleUpdateVehicle } from './helpers/handleUpdateVehicle';
 
 //update vehicle component
-//TODO: make a VehicleForm component and use it in create and update vehicle
 export function UpdateVehicleForm({ setActiveVehicle, setVehicles, setNotification, activeVehicle, setActiveForm, activeForm }) {
 
   //initialize the keys & empty values
@@ -34,7 +33,6 @@ export function UpdateVehicleForm({ setActiveVehicle, setVehicles, setNotificati
       ...formData,
       [input.target.name]: input.target.value
     })
-    //console.log(input.target.value);
   }
 
   return (
