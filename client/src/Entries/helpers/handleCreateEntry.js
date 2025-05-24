@@ -14,7 +14,7 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
   let cost = parseInt(formData.cost, 10);
   let mileage = parseInt(formData.mileage, 10);
   let mechanic = formData.mechanic;
-  let category = formData.category;
+  let category = formData.category.toLowerCase();
   let notes = formData.notes;
   console.log(year, month, day);
 

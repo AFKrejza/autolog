@@ -11,6 +11,7 @@ export function VehicleInfoPanel({
   setNotification,
   setVehicles,
   setActiveVehicle,
+  setShowStats
 }) {
   return (
     <div>
@@ -23,6 +24,13 @@ export function VehicleInfoPanel({
           variant="primary"
         >
           New Entry
+        </Button>
+        <Button
+        onClick={() => {
+          setShowStats(showStats => !showStats); //toggle button via update function
+        }}
+        >
+          Statistics
         </Button>
         <Button
           onClick={() => {

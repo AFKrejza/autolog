@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { SERVER_URL } from '../App';
 import { handleDeleteEntry } from './helpers/handleDeleteEntry';
 
+//NOTE: This function sets entry state and displays each page of entries.
 export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNotification, setActiveForm, activePage, setActivePage }) {
   const url = `${SERVER_URL}/vehicles/${id}/entries`;
 
@@ -29,9 +30,9 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
     <div>
       Page: {activePage}
     </div>
-    <Table striped bordered hover size="sm">
+    <Table className="entry-table" striped bordered hover size="sm">
       <thead>
-        <tr>
+        <tr className="header">
           <th className="date">Date</th>
           <th>Description</th>
           <th>Cost</th>
@@ -45,16 +46,18 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
           <th>Modify</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className='body'>
       {entriesPage.map(entry => 
         <tr key={entry.id}>
         <td className="date">{entry.date}</td>
-        <td>{entry.description}</td>
+        <td className="notes">
+          <div className="notes-content">{entry.description}</div></td>
         <td>{entry.cost}</td>
         <td>{entry.mileage}</td>
         <td>{entry.mechanic}</td>
         <td>{entry.category}</td>
-        <td className='notes'>{entry.notes}</td>
+        <td className='notes'>
+          <div className='notes-content'>{entry.notes}</div></td>
         <td>{entry.createdAt}</td>
         <td>{entry.updatedAt}</td>
         <td>{entry.id}</td>

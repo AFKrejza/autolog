@@ -11,10 +11,10 @@ import { NewEntryForm } from "./Entries/NewEntryForm";
 import { UpdateEntryForm } from "./Entries/UpdateEntryForm";
 import { VehicleInfoPanel } from "./Vehicles/VehicleInfo/VehicleInfoPanel";
 import { Welcome } from "./Components/Welcome";
+import { VehicleStats } from "./Vehicles/VehicleInfo/VehicleStats";
 
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-//TODO: the UI is extremely buggy and doesn't work correctly
 function App() {
   const [activeVehicle, setActiveVehicle] = useState();
   const [notification, setNotification] = useState({ show: false, msg: "" });
@@ -23,7 +23,7 @@ function App() {
   const [activeEntry, setActiveEntry] = useState();
   const [activeForm, setActiveForm] = useState(null); //manages all forms. states: new- update- Entry / Vehicle
   const [activePage, setActivePage] = useState(0); //doesn't control entry list visibility, only page
-  //const [welcome, setWelcome] = useState(true);
+  const [showStats, setShowStats] = useState(false);
 
   return (
     <div className="App">
@@ -48,6 +48,7 @@ function App() {
             setVehicles={setVehicles}
             setActiveForm={setActiveForm}
             setActivePage={setActivePage}
+            setShowStats={setShowStats}
           />
         </div>
         <div className="content">
@@ -65,8 +66,16 @@ function App() {
                 setNotification={setNotification}
                 setVehicles={setVehicles}
                 setActiveVehicle={setActiveVehicle}
+                setShowStats={setShowStats}
               />
             )}
+          </div>
+          <div className="stats">
+          {showStats && activeVehicle && (
+            <VehicleStats
+            id={activeVehicle.id}
+            entries={entries}
+            />)}
           </div>
           <div className="entries">
             {activeVehicle && (
