@@ -26,7 +26,7 @@ export function VehicleStats({ id, entries }) {
 
   return (
     <>
-      <div className='totalCost'>Total spent: {totalCosts}</div>
+      <div className='totalCost'>Total spent: {totalCosts} Kč</div>
       <div className='spendingTable'>
         <Table striped bordered hover size="sm">
           <thead>
@@ -39,7 +39,7 @@ export function VehicleStats({ id, entries }) {
             {categoryStats.map(cat =>
               <tr key={cat.category}>
                 <td>{cat.category}</td>
-                <td>{cat.cost}</td>
+                <td>{cat.cost} Kč</td>
               </tr>
             )}
             

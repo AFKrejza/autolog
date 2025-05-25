@@ -13,3 +13,6 @@ To ignore database changes locally, run the following through Git Bash:
 
 git update-index --assume-unchanged data/vehicles.json
 git update-index --assume-unchanged data/entries.json
+
+to revert:
+git update-index --no-assume-unchanged

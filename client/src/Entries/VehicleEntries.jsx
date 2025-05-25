@@ -55,8 +55,8 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
         <td className="date">{entry.date}</td>
         <td className="notes">
           <div className="notes-content">{entry.description}</div></td>
-        <td>{entry.cost}</td>
-        <td>{entry.mileage}</td>
+        <td>{entry.cost} Kč</td>
+        <td>{entry.mileage} km</td>
         <td>{entry.mechanic}</td>
         <td>{entry.category}</td>
         <td className='notes'>
