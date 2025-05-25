@@ -37,14 +37,7 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
     }
   }
 
-  //TODO: add leap year and precise date validation via .toDateString()
-  //if (day >= 29 && month == 2 && year % 4 == 0) {
-  //  if (year % 100 == 0) return;
-  //  if (year % 400 == 0) return false;
-  //}
-
   //now combine year month day once they've been validated
-  //use padStart method: this could just be a function but alas, time constraint
   let dayStr = day;
   let monthStr = month;
   if (day.length === 1) {
@@ -54,7 +47,13 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
     monthStr = String(month).padStart(2, "0")
   }
   let date = `${year}-${monthStr}-${dayStr}`;
-  console.log(date);
+
+  //check that date is valid (leap years etc)
+  const checkDate = new Date(year, month -1, day +1).toJSON().slice(0,10);
+  if (date != checkDate) {
+    setNotification({ show: true, msg: "Invalid date" });
+    return;
+  }
 
   try {
     const response = await fetch(url, {

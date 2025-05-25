@@ -13,7 +13,6 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
   let category = formData.category;
   let notes = formData.notes;
   let id = formData.id;
-  console.log(formData.day);
 
   //Validations array, cleaner than 10+ if/else statements, but slower since it always checks them all
   //Each check should be true, if false, then it'll send the msg notification (cuz of !check)
@@ -38,14 +37,7 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
     }
   }
 
-  //TODO: add leap year and precise date validation via .toDateString()
-  //if (day >= 29 && month == 2 && year % 4 == 0) {
-  //  if (year % 100 == 0) return;
-  //  if (year % 400 == 0) return false;
-  //}
-
   //now combine year month day once they've been validated
-  //use padStart method: this could just be a function but alas, time constraint
   let dayStr = String(day);
   let monthStr = String(month);
   if (dayStr.length === 1) {
@@ -55,7 +47,14 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
     monthStr = String(month).padStart(2, "0")
   }
   let date = `${year}-${monthStr}-${dayStr}`;
-  console.log(date);
+
+  //check that date is valid (leap years etc)
+  const checkDate = new Date(year, month -1, day +1).toJSON().slice(0,10);
+  if (date != checkDate) {
+    setNotification({ show: true, msg: "Invalid date" });
+    return;
+  }
+
   try {
     const response = await fetch(url, {
       method: "PATCH",
