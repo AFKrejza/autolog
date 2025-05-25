@@ -25,10 +25,13 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
   let end = start + 10;
   let entriesPage = entries.slice(start, end);
 
+  let maxPage = Math.ceil(entries.length / 10);
+  let minPage = 1;
+
   return (
     <>
     <div>
-      Page: {activePage}
+      Page: {activePage} / {maxPage}
     </div>
     <Table className="entry-table" striped bordered hover size="sm">
       <thead>
@@ -87,8 +90,8 @@ export function VehicleEntries({ id, entries, setEntries, setActiveEntry, setNot
       </tbody>
     </Table>
     <div>
-    <Button onClick ={() => setActivePage(activePage - 1)}>{'<'}</Button>
-    <Button onClick ={() => setActivePage(activePage + 1)}>{'>'}</Button>
+    <Button onClick ={() => (activePage -1 >= minPage) ? setActivePage(activePage - 1) : null}>{'<'}</Button>
+    <Button onClick ={() => (activePage +1 <= maxPage) ? setActivePage(activePage + 1) : null}>{'>'}</Button>
     </div>
     </>
   )

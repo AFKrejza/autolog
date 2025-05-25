@@ -2,6 +2,5 @@
 
 Autolog Frontend
 
-18/05/2025
-There are still loads of bugs, especially regarding the UI & forms & notifications. The buttons to view the forms need to be separate.
-Check notes & commits + refactors.
+24/05/2025
+App is feature complete.

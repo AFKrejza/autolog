@@ -23,7 +23,7 @@ function App() {
   const [entries, setEntries] = useState([]);
   const [activeEntry, setActiveEntry] = useState();
   const [activeForm, setActiveForm] = useState(null); //manages all forms. states: new- update- Entry / Vehicle
-  const [activePage, setActivePage] = useState(0); //doesn't control entry list visibility, only page
+  const [activePage, setActivePage] = useState(1); //doesn't control entry list visibility, only page
   const [showStats, setShowStats] = useState(false);
 
   return (
