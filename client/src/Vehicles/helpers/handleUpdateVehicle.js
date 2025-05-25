@@ -48,7 +48,7 @@ export async function handleUpdateVehicle(formData, setActiveVehicle, setNotific
       prevVehicles.map(v => v.id === updated.id ? updated : v)
     );
     setActiveVehicle(updated);
-    setActiveForm();
+    setActiveForm(null);
   }
   catch (error) {
     console.error(error);

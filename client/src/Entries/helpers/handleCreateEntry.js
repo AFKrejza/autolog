@@ -19,9 +19,9 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
   //TODO: verify that cost is always a number, otherwise use isNan(cost)
   const validations = [
     { check: vehicleId && vehicleId > 0, msg: "Missing vehicleId"}, //this should never happen and should probably be handled by the backend if it does
-    { check: year && year >= 0 && [4].includes(year.length), msg: "Invalid year: minimum 1800, must be 4 digits" },
-    { check: month && month > 0 && month <= 12 && [1,2].includes(month.length), msg: "Invalid month: January = 1, February = 2, etc" },
-    { check: day && day > 0 && day <= 31 && [1,2].includes(day.length), msg: "Invalid day: 1 - 31" },
+    { check: year && year >= 0 && [4].includes(String(year).length), msg: "Invalid year: minimum 1800, must be 4 digits" },
+    { check: month && month > 0 && month <= 12 && [1,2].includes(String(month).length), msg: "Invalid month: January = 1, February = 2, etc" },
+    { check: day && day > 0 && day <= 31 && [1,2].includes(String(day).length), msg: "Invalid day: 1 - 31" },
     { check: description, msg: "Missing description" },
     { check: cost && cost >= 0, msg: "Invalid cost: must be integer 0 or greater" },
     { check: mileage && mileage >= 0, msg: "Invalid mileage: must be 0 or greater" },
@@ -38,19 +38,21 @@ export async function handleCreateEntry(id, formData, setNotification, setEntrie
   }
 
   //now combine year month day once they've been validated
-  let dayStr = day;
-  let monthStr = month;
-  if (day.length === 1) {
+  let dayStr = String(day);
+  let monthStr = String(month);
+  if (dayStr.length === 1) {
     dayStr = String(day).padStart(2, "0");
   }
-  if (month.length === 1) {
+  if (monthStr.length === 1) {
     monthStr = String(month).padStart(2, "0")
   }
   let date = `${year}-${monthStr}-${dayStr}`;
 
   //check that date is valid (leap years etc)
   const checkDate = new Date(year, month -1, day +1).toJSON().slice(0,10);
-  if (date != checkDate) {
+  console.log(date);
+  console.log(checkDate);
+  if (date !== checkDate) {
     setNotification({ show: true, msg: "Invalid date" });
     return;
   }

@@ -50,7 +50,7 @@ export async function handleUpdateEntry(formData, setNotification, setEntries, s
 
   //check that date is valid (leap years etc)
   const checkDate = new Date(year, month -1, day +1).toJSON().slice(0,10);
-  if (date != checkDate) {
+  if (date !== checkDate) {
     setNotification({ show: true, msg: "Invalid date" });
     return;
   }

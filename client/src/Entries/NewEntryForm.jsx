@@ -40,9 +40,10 @@ export function NewEntryForm({ id, setNotification, setEntries, setActiveForm })
 
   //handle form change & update formData
   function handleChange(input) {
+    const { name, value, type } = input.target;
     setFormData({
       ...formData,
-      [input.target.name]: input.target.value
+      [name]: type === "number" ? Number(value) : value
     })
   }
 
